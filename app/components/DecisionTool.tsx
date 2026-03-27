@@ -2,12 +2,7 @@
 
 import { useState } from "react";
 
-type Step =
-  | "last"
-  | "time"
-  | "intent"
-  | "vibe"
-  | "result";
+type Step = "last" | "time" | "intent" | "vibe" | "result";
 
 export default function DecisionTool() {
   const [step, setStep] = useState<Step>("last");
@@ -26,13 +21,13 @@ export default function DecisionTool() {
   }
 
   function getResult() {
-    // harde regels eerst
     if (intent === "anxious") {
       return {
         label: "DON’T TEXT",
         color: "text-red-600",
         msg: "You’re acting from anxiety.",
         sub: "Give it time. This feeling will pass.",
+        text: null,
       };
     }
 
@@ -42,6 +37,7 @@ export default function DecisionTool() {
         color: "text-orange-500",
         msg: "Late-night texting isn’t a good move.",
         sub: "Revisit this in the morning.",
+        text: null,
       };
     }
 
@@ -51,6 +47,7 @@ export default function DecisionTool() {
         color: "text-red-600",
         msg: "This is double texting.",
         sub: "Wait. Don’t lower your position.",
+        text: null,
       };
     }
 
@@ -60,6 +57,17 @@ export default function DecisionTool() {
         color: "text-green-600",
         msg: "You’re good to text.",
         sub: "Keep it light and natural.",
+        text: "Hey, I was just thinking about that thing you said 😄",
+      };
+    }
+
+    if (intent === "flirt") {
+      return {
+        label: "TEXT",
+        color: "text-green-600",
+        msg: "Go for it.",
+        sub: "Keep it playful.",
+        text: "So… are you always this interesting or just today?",
       };
     }
 
@@ -68,6 +76,7 @@ export default function DecisionTool() {
       color: "text-orange-500",
       msg: "Not enough signal yet.",
       sub: "Give it a bit more time.",
+      text: null,
     };
   }
 
@@ -85,9 +94,8 @@ export default function DecisionTool() {
   return (
     <div className="space-y-6">
 
-      {/* STEP 1 */}
       {step === "last" && (
-        <div className="space-y-4 text-center">
+        <div className="text-center space-y-4">
           <p className="font-medium">Who texted last?</p>
           <div className="flex justify-center gap-3">
             <Button label="I did" onClick={() => { setLast("me"); setStep("time"); }} />
@@ -96,9 +104,8 @@ export default function DecisionTool() {
         </div>
       )}
 
-      {/* STEP 2 */}
       {step === "time" && (
-        <div className="space-y-4 text-center">
+        <div className="text-center space-y-4">
           <p className="font-medium">How long ago?</p>
           <div className="flex flex-wrap justify-center gap-3">
             <Button label="Just now" onClick={() => { setTime("short"); setStep("intent"); }} />
@@ -109,9 +116,8 @@ export default function DecisionTool() {
         </div>
       )}
 
-      {/* STEP 3 */}
       {step === "intent" && (
-        <div className="space-y-4 text-center">
+        <div className="text-center space-y-4">
           <p className="font-medium">Why do you want to text?</p>
           <div className="flex flex-wrap justify-center gap-3">
             <Button label="I miss them" onClick={() => { setIntent("miss"); setStep("vibe"); }} />
@@ -122,9 +128,8 @@ export default function DecisionTool() {
         </div>
       )}
 
-      {/* STEP 4 */}
       {step === "vibe" && (
-        <div className="space-y-4 text-center">
+        <div className="text-center space-y-4">
           <p className="font-medium">How was the vibe?</p>
           <div className="flex justify-center gap-3">
             <Button label="Good" onClick={() => { setVibe("good"); setStep("result"); }} />
@@ -134,9 +139,9 @@ export default function DecisionTool() {
         </div>
       )}
 
-      {/* RESULT */}
       {step === "result" && (
-        <div className="text-center space-y-3 mt-6">
+        <div className="text-center space-y-4 mt-6">
+
           <div className={`text-5xl font-bold ${result.color}`}>
             {result.label}
           </div>
@@ -144,9 +149,17 @@ export default function DecisionTool() {
           <p className="text-lg">{result.msg}</p>
           <p className="text-sm text-gray-500">{result.sub}</p>
 
+          {result.text && (
+            <div className="mt-4 border rounded p-4 text-left">
+              <p className="text-sm text-gray-500 mb-1">Example text:</p>
+              <p className="font-medium">{result.text}</p>
+            </div>
+          )}
+
           <button onClick={reset} className="underline text-sm mt-4">
             Start over
           </button>
+
         </div>
       )}
 
