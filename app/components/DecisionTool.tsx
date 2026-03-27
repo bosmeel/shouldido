@@ -2,12 +2,13 @@
 
 import { useState } from "react";
 
-type Step = "context" | "last" | "time" | "intent" | "vibe" | "result";
+type Step = "context" | "stage" | "last" | "time" | "intent" | "vibe" | "result";
 
 export default function DecisionTool() {
   const [step, setStep] = useState<Step>("context");
 
   const [context, setContext] = useState<string | null>(null);
+  const [stage, setStage] = useState<string | null>(null);
   const [last, setLast] = useState<string | null>(null);
   const [time, setTime] = useState<string | null>(null);
   const [intent, setIntent] = useState<string | null>(null);
@@ -16,6 +17,7 @@ export default function DecisionTool() {
   function reset() {
     setStep("context");
     setContext(null);
+    setStage(null);
     setLast(null);
     setTime(null);
     setIntent(null);
@@ -30,7 +32,7 @@ export default function DecisionTool() {
           label: "WAIT",
           color: "text-orange-500",
           msg: "Don’t act on stress.",
-          sub: "Wait and follow up calmly later.",
+          sub: "Wait and follow up calmly.",
           text: null,
         };
       }
@@ -40,7 +42,7 @@ export default function DecisionTool() {
           label: "WAIT",
           color: "text-orange-500",
           msg: "Too soon to follow up.",
-          sub: "Give them more time to respond.",
+          sub: "Give them more time.",
           text: null,
         };
       }
@@ -49,29 +51,30 @@ export default function DecisionTool() {
         label: "TEXT",
         color: "text-green-600",
         msg: "A follow-up is appropriate.",
-        sub: "Keep it short and polite.",
+        sub: "Keep it short and professional.",
         text: "Hi, just checking in regarding my previous message.",
       };
     }
 
     // 🔴 RELATIONAL FLOW
 
+    // avond / impuls check
+    if (time === "night" && intent !== "practical") {
+      return {
+        label: "WAIT",
+        color: "text-orange-500",
+        msg: "This is an emotional timing.",
+        sub: "Revisit this in the morning.",
+        text: null,
+      };
+    }
+
     if (intent === "anxious") {
       return {
         label: "DON’T TEXT",
         color: "text-red-600",
         msg: "You’re acting from anxiety.",
-        sub: "Give it time. This feeling will pass.",
-        text: null,
-      };
-    }
-
-    if (time === "night") {
-      return {
-        label: "WAIT",
-        color: "text-orange-500",
-        msg: "Late-night texting isn’t a good move.",
-        sub: "Revisit this in the morning.",
+        sub: "This feeling will pass if you wait.",
         text: null,
       };
     }
@@ -86,12 +89,23 @@ export default function DecisionTool() {
       };
     }
 
-    if (last === "them" && vibe === "good") {
+    // stage nuance
+    if (stage === "new" && time === "long") {
+      return {
+        label: "TEXT",
+        color: "text-green-600",
+        msg: "It’s fine to reach out.",
+        sub: "Early stage allows more flexibility.",
+        text: "Hey, how’s your day going?",
+      };
+    }
+
+    if (stage === "ongoing" && last === "them" && vibe === "good") {
       return {
         label: "TEXT",
         color: "text-green-600",
         msg: "You’re good to text.",
-        sub: "Keep it light and natural.",
+        sub: "Keep it natural and consistent.",
         text: "Hey, I was just thinking about that 😄",
       };
     }
@@ -102,7 +116,7 @@ export default function DecisionTool() {
         color: "text-green-600",
         msg: "Go for it.",
         sub: "Keep it playful.",
-        text: "So… are you always this interesting?",
+        text: "So… are you always this fun?",
       };
     }
 
@@ -134,8 +148,19 @@ export default function DecisionTool() {
         <div className="text-center space-y-4">
           <p className="font-medium">What type of situation is this?</p>
           <div className="flex justify-center gap-3">
-            <Button label="Personal / Dating" onClick={() => { setContext("relational"); setStep("last"); }} />
+            <Button label="Personal / Dating" onClick={() => { setContext("relational"); setStep("stage"); }} />
             <Button label="Formal / Work" onClick={() => { setContext("formal"); setStep("time"); }} />
+          </div>
+        </div>
+      )}
+
+      {/* STAGE */}
+      {step === "stage" && (
+        <div className="text-center space-y-4">
+          <p className="font-medium">What stage are you in?</p>
+          <div className="flex justify-center gap-3">
+            <Button label="New / Early" onClick={() => { setStage("new"); setStep("last"); }} />
+            <Button label="Ongoing" onClick={() => { setStage("ongoing"); setStep("last"); }} />
           </div>
         </div>
       )}
