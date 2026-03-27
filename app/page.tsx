@@ -4,26 +4,34 @@ import Nav from "./components/Nav";
 
 export default function Page() {
   return (
-    <main className="max-w-xl mx-auto p-6 space-y-6">
+    <main className="max-w-xl mx-auto px-6 py-10 space-y-8">
 
       <Nav />
 
-      <h1 className="text-3xl font-semibold text-center">
-        Should I Text Them?
-      </h1>
+      <header className="text-center space-y-3">
+        <h1 className="text-4xl font-semibold">
+          Should I Text Them?
+        </h1>
 
-      <p className="text-center text-gray-600">
-        Get a clear answer in seconds. No overthinking.
-      </p>
+        <p className="text-gray-600 text-lg">
+          Stop overthinking. Get a clear answer in seconds.
+        </p>
+      </header>
 
-      <DecisionTool />
+      <section className="border rounded-2xl p-6 shadow-sm">
+        <DecisionTool />
+      </section>
 
-      <div className="text-center text-sm text-gray-500">
+      <section className="text-center text-sm text-gray-500">
         Also try:{" "}
         <a href="/text-him" className="underline">
           Should I text him?
+        </a>{" "}
+        ·{" "}
+        <a href="/text-her" className="underline">
+          Should I text her?
         </a>
-      </div>
+      </section>
 
       <SeoBlock title="When should you text someone?" />
 
