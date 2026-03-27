@@ -1,5 +1,4 @@
 import DecisionTool from "./components/DecisionTool";
-import SeoBlock from "./components/SeoBlock";
 
 export default function Page() {
   return (
@@ -19,34 +18,31 @@ export default function Page() {
         <DecisionTool />
       </section>
 
-      <section className="space-y-6">
+      <section className="space-y-6 text-gray-700">
 
         <div>
           <h2 className="text-xl font-semibold mb-2">
-            What this tool helps you decide
+            What this tool actually does
           </h2>
 
-          <p className="text-gray-700">
-            Not sure if you should text someone? This tool gives you a clear answer based on timing, context, and conversation dynamics. No guessing, no overthinking.
+          <p>
+            This tool looks at timing, conversation flow, and your intent to give you a clear answer. It helps you avoid overthinking and prevents you from texting too soon or chasing.
           </p>
         </div>
 
         <div>
           <h2 className="text-xl font-semibold mb-2">
-            Situations this covers
+            When this tool is useful
           </h2>
 
-          <ul className="list-disc ml-5 text-gray-700">
-            <li>Should I text him?</li>
-            <li>Should I text her?</li>
+          <ul className="list-disc ml-5">
+            <li>Should I text him or her?</li>
             <li>Should I double text?</li>
             <li>Should I reach out again?</li>
           </ul>
         </div>
 
       </section>
-
-      <SeoBlock title="When should you text someone?" />
 
     </main>
   );
