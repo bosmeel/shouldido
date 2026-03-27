@@ -28,13 +28,24 @@ export default function DecisionTool() {
 
   function getResult() {
 
-    // 🔵 FORMAL
+    // 🔵 FORMAL FLOW
     if (context === "formal") {
-      if (delay === "short") {
+
+      if (intent === "uncertain") {
         return {
           label: "WAIT",
           color: "text-orange-500",
-          msg: "Too soon to follow up.",
+          msg: "Uncertainty is not a reason to act.",
+          sub: "Wait and follow up later with clarity.",
+          text: null,
+        };
+      }
+
+      if (intent === "impatient" && delay === "short") {
+        return {
+          label: "WAIT",
+          color: "text-orange-500",
+          msg: "You’re acting too quickly.",
           sub: "Give them more time.",
           text: null,
         };
@@ -43,21 +54,20 @@ export default function DecisionTool() {
       return {
         label: "TEXT",
         color: "text-green-600",
-        msg: "A follow-up is fine.",
-        sub: "Keep it short and polite.",
+        msg: "A follow-up is appropriate.",
+        sub: "Keep it short and professional.",
         text: "Hi, just checking in regarding my previous message.",
       };
     }
 
-    // 🔴 RELATIONAL
+    // 🔴 RELATIONAL FLOW
 
-    // timing check (NIEUW)
     if (timing === "night" && intent !== "practical") {
       return {
         label: "WAIT",
         color: "text-orange-500",
-        msg: "You’re about to text at an emotional moment.",
-        sub: "Wait until morning for a clearer mindset.",
+        msg: "This is an emotional moment.",
+        sub: "Wait until morning.",
         text: null,
       };
     }
@@ -67,7 +77,7 @@ export default function DecisionTool() {
         label: "DON’T TEXT",
         color: "text-red-600",
         msg: "You’re acting from anxiety.",
-        sub: "This feeling will pass.",
+        sub: "This will pass if you wait.",
         text: null,
       };
     }
@@ -174,7 +184,7 @@ export default function DecisionTool() {
         </div>
       )}
 
-      {/* TIMING (NIEUW) */}
+      {/* TIMING */}
       {step === "timing" && (
         <div className="text-center space-y-4">
           <p>When are you about to send this?</p>
@@ -187,10 +197,23 @@ export default function DecisionTool() {
       {step === "intent" && (
         <div className="text-center space-y-4">
           <p>Why do you want to text?</p>
-          <Button label="I miss them" onClick={() => { setIntent("miss"); setStep(context==="formal" ? "result" : "vibe"); }} />
-          <Button label="Practical reason" onClick={() => { setIntent("practical"); setStep(context==="formal" ? "result" : "vibe"); }} />
-          <Button label="Flirting" onClick={() => { setIntent("flirt"); setStep("vibe"); }} />
-          <Button label="I feel anxious" onClick={() => { setIntent("anxious"); setStep("result"); }} />
+
+          {context === "formal" ? (
+            <>
+              <Button label="Follow up / status" onClick={() => { setIntent("followup"); setStep("result"); }} />
+              <Button label="Practical reason" onClick={() => { setIntent("practical"); setStep("result"); }} />
+              <Button label="I feel uncertain" onClick={() => { setIntent("uncertain"); setStep("result"); }} />
+              <Button label="I feel impatient" onClick={() => { setIntent("impatient"); setStep("result"); }} />
+            </>
+          ) : (
+            <>
+              <Button label="I miss them" onClick={() => { setIntent("miss"); setStep("vibe"); }} />
+              <Button label="Practical reason" onClick={() => { setIntent("practical"); setStep("vibe"); }} />
+              <Button label="Flirting" onClick={() => { setIntent("flirt"); setStep("vibe"); }} />
+              <Button label="I feel anxious" onClick={() => { setIntent("anxious"); setStep("result"); }} />
+            </>
+          )}
+
         </div>
       )}
 
