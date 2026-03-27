@@ -74,33 +74,63 @@ export default function DecisionTool() {
     return score;
   }
 
-  function getResult(): ResultType {
-    if (!last || !time || !vibe || !intent) return null;
+  function getResult() {
+  if (!last || !time || !vibe || !intent) return null;
 
-    const score = getScore();
+  const score = getScore();
 
-    if (score >= 3) {
-      return {
-        label: "TEXT",
-        color: "text-green-600",
-        msg: "You’ve waited long enough. This won’t hurt your position.",
-      };
-    }
+  // 🔴 situatie detectie
+  const isDoubleText = last === "me" && (time === "<1h" || time === "hours");
+  const isChasing = last === "me" && vibe === "bad";
+  const theyPulledAway = last === "them" && vibe === "bad";
 
-    if (score <= -3) {
-      return {
-        label: "DON’T TEXT",
-        color: "text-red-600",
-        msg: "You’re chasing. Let them come to you.",
-      };
-    }
+  if (isDoubleText) {
+    return {
+      label: "DON’T TEXT",
+      color: "text-red-600",
+      msg: "This is double texting. Wait — you risk looking needy.",
+    };
+  }
 
+  if (isChasing) {
+    return {
+      label: "DON’T TEXT",
+      color: "text-red-600",
+      msg: "You’re chasing. Give them space.",
+    };
+  }
+
+  if (theyPulledAway) {
     return {
       label: "WAIT",
       color: "text-orange-500",
-      msg: "Too early. Give it more space.",
+      msg: "They pulled back. Let them re-engage.",
     };
   }
+
+  // fallback op score
+  if (score >= 3) {
+    return {
+      label: "TEXT",
+      color: "text-green-600",
+      msg: "Good timing. You can reach out.",
+    };
+  }
+
+  if (score <= -3) {
+    return {
+      label: "DON’T TEXT",
+      color: "text-red-600",
+      msg: "Not a good move right now.",
+    };
+  }
+
+  return {
+    label: "WAIT",
+    color: "text-orange-500",
+    msg: "Too early. Give it more time.",
+  };
+}
 
   const result = getResult();
 
