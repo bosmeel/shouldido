@@ -99,8 +99,30 @@ export default function DecisionTool() {
       </div>
 
       {result && (
-        <div className="text-center mt-4">
-          <div className="mt-6 text-center space-y-2">
+  <div className="mt-6 text-center space-y-3">
+
+    <div className={`text-5xl font-bold ${result.color}`}>
+      {result.label}
+    </div>
+
+    <p className="text-gray-700 text-lg">
+      {result.msg}
+    </p>
+
+    <button
+      onClick={() => {
+        setLast(null);
+        setTime(null);
+        setVibe(null);
+        setIntent(null);
+      }}
+      className="mt-2 text-sm underline text-gray-500"
+    >
+      Start over
+    </button>
+
+  </div>
+)}
 
   <div className={`text-5xl font-bold ${result.color}`}>
     {result.label}
