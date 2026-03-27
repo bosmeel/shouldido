@@ -2,18 +2,20 @@
 
 import { useState } from "react";
 
-type Step = "last" | "time" | "intent" | "vibe" | "result";
+type Step = "context" | "last" | "time" | "intent" | "vibe" | "result";
 
 export default function DecisionTool() {
-  const [step, setStep] = useState<Step>("last");
+  const [step, setStep] = useState<Step>("context");
 
+  const [context, setContext] = useState<string | null>(null);
   const [last, setLast] = useState<string | null>(null);
   const [time, setTime] = useState<string | null>(null);
   const [intent, setIntent] = useState<string | null>(null);
   const [vibe, setVibe] = useState<string | null>(null);
 
   function reset() {
-    setStep("last");
+    setStep("context");
+    setContext(null);
     setLast(null);
     setTime(null);
     setIntent(null);
@@ -21,6 +23,39 @@ export default function DecisionTool() {
   }
 
   function getResult() {
+    // 🔵 FORMAL FLOW
+    if (context === "formal") {
+      if (intent === "anxious") {
+        return {
+          label: "WAIT",
+          color: "text-orange-500",
+          msg: "Don’t act on stress.",
+          sub: "Wait and follow up calmly later.",
+          text: null,
+        };
+      }
+
+      if (time === "short") {
+        return {
+          label: "WAIT",
+          color: "text-orange-500",
+          msg: "Too soon to follow up.",
+          sub: "Give them more time to respond.",
+          text: null,
+        };
+      }
+
+      return {
+        label: "TEXT",
+        color: "text-green-600",
+        msg: "A follow-up is appropriate.",
+        sub: "Keep it short and polite.",
+        text: "Hi, just checking in regarding my previous message.",
+      };
+    }
+
+    // 🔴 RELATIONAL FLOW
+
     if (intent === "anxious") {
       return {
         label: "DON’T TEXT",
@@ -57,7 +92,7 @@ export default function DecisionTool() {
         color: "text-green-600",
         msg: "You’re good to text.",
         sub: "Keep it light and natural.",
-        text: "Hey, I was just thinking about that thing you said 😄",
+        text: "Hey, I was just thinking about that 😄",
       };
     }
 
@@ -67,7 +102,7 @@ export default function DecisionTool() {
         color: "text-green-600",
         msg: "Go for it.",
         sub: "Keep it playful.",
-        text: "So… are you always this interesting or just today?",
+        text: "So… are you always this interesting?",
       };
     }
 
@@ -75,7 +110,7 @@ export default function DecisionTool() {
       label: "WAIT",
       color: "text-orange-500",
       msg: "Not enough signal yet.",
-      sub: "Give it a bit more time.",
+      sub: "Give it more time.",
       text: null,
     };
   }
@@ -94,6 +129,18 @@ export default function DecisionTool() {
   return (
     <div className="space-y-6">
 
+      {/* CONTEXT */}
+      {step === "context" && (
+        <div className="text-center space-y-4">
+          <p className="font-medium">What type of situation is this?</p>
+          <div className="flex justify-center gap-3">
+            <Button label="Personal / Dating" onClick={() => { setContext("relational"); setStep("last"); }} />
+            <Button label="Formal / Work" onClick={() => { setContext("formal"); setStep("time"); }} />
+          </div>
+        </div>
+      )}
+
+      {/* LAST */}
       {step === "last" && (
         <div className="text-center space-y-4">
           <p className="font-medium">Who texted last?</p>
@@ -104,6 +151,7 @@ export default function DecisionTool() {
         </div>
       )}
 
+      {/* TIME */}
       {step === "time" && (
         <div className="text-center space-y-4">
           <p className="font-medium">How long ago?</p>
@@ -116,19 +164,21 @@ export default function DecisionTool() {
         </div>
       )}
 
+      {/* INTENT */}
       {step === "intent" && (
         <div className="text-center space-y-4">
           <p className="font-medium">Why do you want to text?</p>
           <div className="flex flex-wrap justify-center gap-3">
-            <Button label="I miss them" onClick={() => { setIntent("miss"); setStep("vibe"); }} />
-            <Button label="Practical reason" onClick={() => { setIntent("practical"); setStep("vibe"); }} />
+            <Button label="I miss them" onClick={() => { setIntent("miss"); setStep(context==="formal" ? "result" : "vibe"); }} />
+            <Button label="Practical reason" onClick={() => { setIntent("practical"); setStep(context==="formal" ? "result" : "vibe"); }} />
             <Button label="Flirting" onClick={() => { setIntent("flirt"); setStep("vibe"); }} />
             <Button label="I feel anxious" onClick={() => { setIntent("anxious"); setStep("result"); }} />
           </div>
         </div>
       )}
 
-      {step === "vibe" && (
+      {/* VIBE */}
+      {step === "vibe" && context === "relational" && (
         <div className="text-center space-y-4">
           <p className="font-medium">How was the vibe?</p>
           <div className="flex justify-center gap-3">
@@ -139,6 +189,7 @@ export default function DecisionTool() {
         </div>
       )}
 
+      {/* RESULT */}
       {step === "result" && (
         <div className="text-center space-y-4 mt-6">
 
