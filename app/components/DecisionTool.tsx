@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-type Step = "context" | "stage" | "last" | "time" | "intent" | "vibe" | "result";
+type Step = "context" | "stage" | "last" | "delay" | "timing" | "intent" | "vibe" | "result";
 
 export default function DecisionTool() {
   const [step, setStep] = useState<Step>("context");
@@ -10,7 +10,8 @@ export default function DecisionTool() {
   const [context, setContext] = useState<string | null>(null);
   const [stage, setStage] = useState<string | null>(null);
   const [last, setLast] = useState<string | null>(null);
-  const [time, setTime] = useState<string | null>(null);
+  const [delay, setDelay] = useState<string | null>(null);
+  const [timing, setTiming] = useState<string | null>(null);
   const [intent, setIntent] = useState<string | null>(null);
   const [vibe, setVibe] = useState<string | null>(null);
 
@@ -19,25 +20,17 @@ export default function DecisionTool() {
     setContext(null);
     setStage(null);
     setLast(null);
-    setTime(null);
+    setDelay(null);
+    setTiming(null);
     setIntent(null);
     setVibe(null);
   }
 
   function getResult() {
-    // 🔵 FORMAL FLOW
-    if (context === "formal") {
-      if (intent === "anxious") {
-        return {
-          label: "WAIT",
-          color: "text-orange-500",
-          msg: "Don’t act on stress.",
-          sub: "Wait and follow up calmly.",
-          text: null,
-        };
-      }
 
-      if (time === "short") {
+    // 🔵 FORMAL
+    if (context === "formal") {
+      if (delay === "short") {
         return {
           label: "WAIT",
           color: "text-orange-500",
@@ -50,21 +43,21 @@ export default function DecisionTool() {
       return {
         label: "TEXT",
         color: "text-green-600",
-        msg: "A follow-up is appropriate.",
-        sub: "Keep it short and professional.",
+        msg: "A follow-up is fine.",
+        sub: "Keep it short and polite.",
         text: "Hi, just checking in regarding my previous message.",
       };
     }
 
-    // 🔴 RELATIONAL FLOW
+    // 🔴 RELATIONAL
 
-    // avond / impuls check
-    if (time === "night" && intent !== "practical") {
+    // timing check (NIEUW)
+    if (timing === "night" && intent !== "practical") {
       return {
         label: "WAIT",
         color: "text-orange-500",
-        msg: "This is an emotional timing.",
-        sub: "Revisit this in the morning.",
+        msg: "You’re about to text at an emotional moment.",
+        sub: "Wait until morning for a clearer mindset.",
         text: null,
       };
     }
@@ -74,28 +67,27 @@ export default function DecisionTool() {
         label: "DON’T TEXT",
         color: "text-red-600",
         msg: "You’re acting from anxiety.",
-        sub: "This feeling will pass if you wait.",
+        sub: "This feeling will pass.",
         text: null,
       };
     }
 
-    if (last === "me" && time === "short") {
+    if (last === "me" && delay === "short") {
       return {
         label: "DON’T TEXT",
         color: "text-red-600",
         msg: "This is double texting.",
-        sub: "Wait. Don’t lower your position.",
+        sub: "Wait. Don’t chase.",
         text: null,
       };
     }
 
-    // stage nuance
-    if (stage === "new" && time === "long") {
+    if (stage === "new" && delay === "long") {
       return {
         label: "TEXT",
         color: "text-green-600",
-        msg: "It’s fine to reach out.",
-        sub: "Early stage allows more flexibility.",
+        msg: "It’s okay to reach out.",
+        sub: "Early stage is flexible.",
         text: "Hey, how’s your day going?",
       };
     }
@@ -105,7 +97,7 @@ export default function DecisionTool() {
         label: "TEXT",
         color: "text-green-600",
         msg: "You’re good to text.",
-        sub: "Keep it natural and consistent.",
+        sub: "Keep it natural.",
         text: "Hey, I was just thinking about that 😄",
       };
     }
@@ -146,10 +138,10 @@ export default function DecisionTool() {
       {/* CONTEXT */}
       {step === "context" && (
         <div className="text-center space-y-4">
-          <p className="font-medium">What type of situation is this?</p>
+          <p>What type of situation is this?</p>
           <div className="flex justify-center gap-3">
             <Button label="Personal / Dating" onClick={() => { setContext("relational"); setStep("stage"); }} />
-            <Button label="Formal / Work" onClick={() => { setContext("formal"); setStep("time"); }} />
+            <Button label="Formal / Work" onClick={() => { setContext("formal"); setStep("delay"); }} />
           </div>
         </div>
       )}
@@ -157,85 +149,80 @@ export default function DecisionTool() {
       {/* STAGE */}
       {step === "stage" && (
         <div className="text-center space-y-4">
-          <p className="font-medium">What stage are you in?</p>
-          <div className="flex justify-center gap-3">
-            <Button label="New / Early" onClick={() => { setStage("new"); setStep("last"); }} />
-            <Button label="Ongoing" onClick={() => { setStage("ongoing"); setStep("last"); }} />
-          </div>
+          <p>What stage are you in?</p>
+          <Button label="New / Early" onClick={() => { setStage("new"); setStep("last"); }} />
+          <Button label="Ongoing" onClick={() => { setStage("ongoing"); setStep("last"); }} />
         </div>
       )}
 
       {/* LAST */}
       {step === "last" && (
         <div className="text-center space-y-4">
-          <p className="font-medium">Who texted last?</p>
-          <div className="flex justify-center gap-3">
-            <Button label="I did" onClick={() => { setLast("me"); setStep("time"); }} />
-            <Button label="They did" onClick={() => { setLast("them"); setStep("time"); }} />
-          </div>
+          <p>Who texted last?</p>
+          <Button label="I did" onClick={() => { setLast("me"); setStep("delay"); }} />
+          <Button label="They did" onClick={() => { setLast("them"); setStep("delay"); }} />
         </div>
       )}
 
-      {/* TIME */}
-      {step === "time" && (
+      {/* DELAY */}
+      {step === "delay" && (
         <div className="text-center space-y-4">
-          <p className="font-medium">How long ago?</p>
-          <div className="flex flex-wrap justify-center gap-3">
-            <Button label="Just now" onClick={() => { setTime("short"); setStep("intent"); }} />
-            <Button label="Few hours" onClick={() => { setTime("hours"); setStep("intent"); }} />
-            <Button label="1+ day" onClick={() => { setTime("long"); setStep("intent"); }} />
-            <Button label="Late night" onClick={() => { setTime("night"); setStep("intent"); }} />
-          </div>
+          <p>How long since the last message?</p>
+          <Button label="Just now" onClick={() => { setDelay("short"); setStep("timing"); }} />
+          <Button label="Few hours" onClick={() => { setDelay("hours"); setStep("timing"); }} />
+          <Button label="1+ day" onClick={() => { setDelay("long"); setStep("timing"); }} />
+        </div>
+      )}
+
+      {/* TIMING (NIEUW) */}
+      {step === "timing" && (
+        <div className="text-center space-y-4">
+          <p>When are you about to send this?</p>
+          <Button label="Morning / Daytime" onClick={() => { setTiming("day"); setStep("intent"); }} />
+          <Button label="Evening / Night" onClick={() => { setTiming("night"); setStep("intent"); }} />
         </div>
       )}
 
       {/* INTENT */}
       {step === "intent" && (
         <div className="text-center space-y-4">
-          <p className="font-medium">Why do you want to text?</p>
-          <div className="flex flex-wrap justify-center gap-3">
-            <Button label="I miss them" onClick={() => { setIntent("miss"); setStep(context==="formal" ? "result" : "vibe"); }} />
-            <Button label="Practical reason" onClick={() => { setIntent("practical"); setStep(context==="formal" ? "result" : "vibe"); }} />
-            <Button label="Flirting" onClick={() => { setIntent("flirt"); setStep("vibe"); }} />
-            <Button label="I feel anxious" onClick={() => { setIntent("anxious"); setStep("result"); }} />
-          </div>
+          <p>Why do you want to text?</p>
+          <Button label="I miss them" onClick={() => { setIntent("miss"); setStep(context==="formal" ? "result" : "vibe"); }} />
+          <Button label="Practical reason" onClick={() => { setIntent("practical"); setStep(context==="formal" ? "result" : "vibe"); }} />
+          <Button label="Flirting" onClick={() => { setIntent("flirt"); setStep("vibe"); }} />
+          <Button label="I feel anxious" onClick={() => { setIntent("anxious"); setStep("result"); }} />
         </div>
       )}
 
       {/* VIBE */}
       {step === "vibe" && context === "relational" && (
         <div className="text-center space-y-4">
-          <p className="font-medium">How was the vibe?</p>
-          <div className="flex justify-center gap-3">
-            <Button label="Good" onClick={() => { setVibe("good"); setStep("result"); }} />
-            <Button label="Mixed" onClick={() => { setVibe("mixed"); setStep("result"); }} />
-            <Button label="Bad" onClick={() => { setVibe("bad"); setStep("result"); }} />
-          </div>
+          <p>How was the vibe?</p>
+          <Button label="Good" onClick={() => { setVibe("good"); setStep("result"); }} />
+          <Button label="Mixed" onClick={() => { setVibe("mixed"); setStep("result"); }} />
+          <Button label="Bad" onClick={() => { setVibe("bad"); setStep("result"); }} />
         </div>
       )}
 
       {/* RESULT */}
       {step === "result" && (
         <div className="text-center space-y-4 mt-6">
-
           <div className={`text-5xl font-bold ${result.color}`}>
             {result.label}
           </div>
-
-          <p className="text-lg">{result.msg}</p>
+          <p>{result.msg}</p>
           <p className="text-sm text-gray-500">{result.sub}</p>
 
           {result.text && (
-            <div className="mt-4 border rounded p-4 text-left">
-              <p className="text-sm text-gray-500 mb-1">Example text:</p>
-              <p className="font-medium">{result.text}</p>
+            <div className="border p-4 mt-4 text-left">
+              <p className="text-sm text-gray-500">Example text:</p>
+              <p>{result.text}</p>
             </div>
           )}
 
-          <button onClick={reset} className="underline text-sm mt-4">
+          <button onClick={reset} className="underline mt-4 text-sm">
             Start over
           </button>
-
         </div>
       )}
 
