@@ -89,6 +89,13 @@ export default function Page() {
         Should I Text Them?
       </h1>
 
+<div className="text-center text-sm text-gray-500">
+  Also try:{" "}
+  <a href="/text-him" className="underline">
+    Should I text him?
+  </a>
+</div>
+
       <p className="text-center text-gray-600">
         Get a clear answer in seconds. No overthinking.
       </p>
