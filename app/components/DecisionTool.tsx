@@ -100,8 +100,17 @@ export default function DecisionTool() {
 
       {result && (
         <div className="text-center mt-4">
-          <div className={`text-3xl font-bold ${result.color}`}>{result.label}</div>
-          <p>{result.msg}</p>
+          <div className="mt-6 text-center space-y-2">
+
+  <div className={`text-5xl font-bold ${result.color}`}>
+    {result.label}
+  </div>
+
+  <p className="text-gray-700 text-lg">
+    {result.msg}
+  </p>
+
+</div>
         </div>
       )}
     </div>
