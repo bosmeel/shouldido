@@ -2,15 +2,19 @@ import DecisionTool from "./components/DecisionTool";
 
 export default function Page() {
   return (
-    <main className="max-w-xl mx-auto px-6 py-10 space-y-10">
+    <main className="max-w-xl mx-auto px-6 py-12 space-y-12">
 
-      <header className="text-center space-y-3">
+      <header className="text-center space-y-4">
         <h1 className="text-4xl font-semibold">
           Should I Text Them?
         </h1>
 
         <p className="text-gray-600 text-lg">
-          A simple tool to decide if you should text — or wait.
+          A simple tool that helps you decide if you should text — based on timing, context, and human behavior.
+        </p>
+
+        <p className="text-sm text-gray-400">
+          Built to reduce overthinking. Not to encourage it.
         </p>
       </header>
 
@@ -18,27 +22,43 @@ export default function Page() {
         <DecisionTool />
       </section>
 
-      <section className="space-y-6 text-gray-700">
+      <section className="space-y-8 text-gray-700">
 
         <div>
           <h2 className="text-xl font-semibold mb-2">
-            What this tool actually does
+            Why this works
           </h2>
 
           <p>
-            This tool looks at timing, conversation flow, and your intent to give you a clear answer. It helps you avoid overthinking and prevents you from texting too soon or chasing.
+            Most people don’t struggle with what to say — they struggle with when to say it. This tool helps you step back and look at the situation more objectively, so you don’t act on impulse, anxiety, or overthinking.
           </p>
         </div>
 
         <div>
           <h2 className="text-xl font-semibold mb-2">
-            When this tool is useful
+            What this tool takes into account
           </h2>
 
-          <ul className="list-disc ml-5">
-            <li>Should I text him or her?</li>
-            <li>Should I double text?</li>
-            <li>Should I reach out again?</li>
+          <ul className="list-disc ml-5 space-y-1">
+            <li>The type of situation (personal or formal)</li>
+            <li>Where you are in the interaction</li>
+            <li>Who texted last</li>
+            <li>How much time has passed</li>
+            <li>Your actual motivation</li>
+            <li>Emotional vs rational timing</li>
+          </ul>
+        </div>
+
+        <div>
+          <h2 className="text-xl font-semibold mb-2">
+            When to use it
+          </h2>
+
+          <ul className="list-disc ml-5 space-y-1">
+            <li>When you feel unsure or hesitant</li>
+            <li>When you’re about to send a second message</li>
+            <li>When you’re overthinking a situation</li>
+            <li>When you want to avoid coming across as too eager</li>
           </ul>
         </div>
 
