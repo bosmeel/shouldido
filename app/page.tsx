@@ -1,197 +1,31 @@
-"use client";
-
-import { useState } from "react";
+import DecisionTool from "./components/DecisionTool";
+import SeoBlock from "./components/SeoBlock";
+import Nav from "./components/Nav";
 
 export default function Page() {
-  const [last, setLast] = useState<string | null>(null);
-  const [time, setTime] = useState<string | null>(null);
-  const [vibe, setVibe] = useState<string | null>(null);
-  const [intent, setIntent] = useState<string | null>(null);
-
-  function getScore() {
-    let score = 0;
-
-    // who texted last
-    if (last === "me") score -= 2;
-    if (last === "them") score += 2;
-
-    // time
-    if (time === "<1h") score -= 3;
-    if (time === "hours") score -= 2;
-    if (time === "1d") score += 0;
-    if (time === "2-3d") score += 2;
-    if (time === "4d") score += 3;
-
-    // vibe
-    if (vibe === "good") score += 2;
-    if (vibe === "mixed") score += 0;
-    if (vibe === "bad") score -= 3;
-
-    // intent
-    if (intent === "miss") score += 0;
-    if (intent === "need") score += 1;
-    if (intent === "check") score += 1;
-    if (intent === "emotional") score -= 2;
-
-    return score;
-  }
-
-  function getResult() {
-    if (!last || !time || !vibe || !intent) return null;
-
-    const score = getScore();
-
-    if (score >= 3)
-      return {
-        label: "TEXT",
-        color: "text-green-600",
-        msg: "You’ve waited long enough. This won’t hurt your position.",
-      };
-
-    if (score <= -3)
-      return {
-        label: "DON’T TEXT",
-        color: "text-red-600",
-        msg: "You’re chasing. Let them come to you.",
-      };
-
-    return {
-      label: "WAIT",
-      color: "text-orange-500",
-      msg: "Too early. Give it more space.",
-    };
-  }
-
-  const result = getResult();
-
-  const Button = ({
-    value,
-    selected,
-    onClick,
-  }: {
-    value: string;
-    selected: boolean;
-    onClick: () => void;
-  }) => (
-    <button
-      onClick={onClick}
-      className={`px-4 py-2 border rounded ${
-        selected ? "bg-black text-white" : "bg-white"
-      }`}
-    >
-      {value}
-    </button>
-  );
-
   return (
     <main className="max-w-xl mx-auto p-6 space-y-6">
+
+      <Nav />
+
       <h1 className="text-3xl font-semibold text-center">
         Should I Text Them?
       </h1>
-
-<div className="text-center text-sm text-gray-500">
-  Also try:{" "}
-  <a href="/text-him" className="underline">
-    Should I text him?
-  </a>
-</div>
 
       <p className="text-center text-gray-600">
         Get a clear answer in seconds. No overthinking.
       </p>
 
-      <div className="space-y-4">
+      <DecisionTool />
 
-        <div>
-          <p className="mb-2 font-medium">Who texted last?</p>
-          <div className="flex gap-2">
-            <Button value="Me" selected={last==="me"} onClick={()=>setLast("me")} />
-            <Button value="Them" selected={last==="them"} onClick={()=>setLast("them")} />
-          </div>
-        </div>
-
-        <div>
-          <p className="mb-2 font-medium">How long ago?</p>
-          <div className="flex flex-wrap gap-2">
-            <Button value="<1h" selected={time==="<1h"} onClick={()=>setTime("<1h")} />
-            <Button value="Hours" selected={time==="hours"} onClick={()=>setTime("hours")} />
-            <Button value="1 day" selected={time==="1d"} onClick={()=>setTime("1d")} />
-            <Button value="2–3 days" selected={time==="2-3d"} onClick={()=>setTime("2-3d")} />
-            <Button value="4+ days" selected={time==="4d"} onClick={()=>setTime("4d")} />
-          </div>
-        </div>
-
-        <div>
-          <p className="mb-2 font-medium">Conversation vibe</p>
-          <div className="flex gap-2">
-            <Button value="Good" selected={vibe==="good"} onClick={()=>setVibe("good")} />
-            <Button value="Mixed" selected={vibe==="mixed"} onClick={()=>setVibe("mixed")} />
-            <Button value="Bad" selected={vibe==="bad"} onClick={()=>setVibe("bad")} />
-          </div>
-        </div>
-
-        <div>
-          <p className="mb-2 font-medium">Why text?</p>
-          <div className="flex flex-wrap gap-2">
-            <Button value="Miss them" selected={intent==="miss"} onClick={()=>setIntent("miss")} />
-            <Button value="Need something" selected={intent==="need"} onClick={()=>setIntent("need")} />
-            <Button value="Check in" selected={intent==="check"} onClick={()=>setIntent("check")} />
-            <Button value="Emotional" selected={intent==="emotional"} onClick={()=>setIntent("emotional")} />
-          </div>
-        </div>
-
+      <div className="text-center text-sm text-gray-500">
+        Also try:{" "}
+        <a href="/text-him" className="underline">
+          Should I text him?
+        </a>
       </div>
 
-      {result && (
-        <div className="text-center mt-6">
-          <div className={`text-4xl font-bold ${result.color}`}>
-            {result.label}
-          </div>
-          <p className="mt-2 text-gray-700">{result.msg}</p>
-        </div>
-      )}
-
-<section className="mt-12 space-y-8">
-
-  <div>
-    <h2 className="text-xl font-semibold mb-2">When should you text someone?</h2>
-    <p className="text-gray-700">
-      Timing matters when it comes to texting. If the conversation was positive and enough time has passed, reaching out can strengthen the connection. But texting too soon, especially if you were the last to message, can come across as needy or reduce attraction. A good rule is to match the energy and investment of the other person.
-    </p>
-  </div>
-
-  <div>
-    <h2 className="text-xl font-semibold mb-2">Signs you should NOT text</h2>
-    <ul className="list-disc ml-5 text-gray-700">
-      <li>You already texted last and got no reply</li>
-      <li>It has only been a short time</li>
-      <li>The conversation ended negatively</li>
-      <li>You feel anxious or emotional</li>
-      <li>You are trying to force a response</li>
-    </ul>
-  </div>
-
-  <div>
-    <h2 className="text-xl font-semibold mb-2">Signs you should text</h2>
-    <ul className="list-disc ml-5 text-gray-700">
-      <li>They texted last</li>
-      <li>Enough time has passed</li>
-      <li>The vibe was positive</li>
-      <li>You have a clear reason to reach out</li>
-      <li>There is mutual interest</li>
-    </ul>
-  </div>
-
-  <div>
-    <h2 className="text-xl font-semibold mb-2">FAQ</h2>
-    <div className="space-y-3 text-gray-700">
-      <p><strong>How long should I wait to text?</strong><br/>Usually at least a day if you texted last.</p>
-      <p><strong>Is double texting bad?</strong><br/>It can reduce attraction if done too quickly.</p>
-      <p><strong>What if they don’t reply?</strong><br/>Don’t chase. Let them come back to you.</p>
-    </div>
-  </div>
-
-</section>
+      <SeoBlock title="When should you text someone?" />
 
     </main>
   );
