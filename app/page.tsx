@@ -143,6 +143,49 @@ export default function Page() {
           <p className="mt-2 text-gray-700">{result.msg}</p>
         </div>
       )}
+
+<section className="mt-12 space-y-8">
+
+  <div>
+    <h2 className="text-xl font-semibold mb-2">When should you text someone?</h2>
+    <p className="text-gray-700">
+      Timing matters when it comes to texting. If the conversation was positive and enough time has passed, reaching out can strengthen the connection. But texting too soon, especially if you were the last to message, can come across as needy or reduce attraction. A good rule is to match the energy and investment of the other person.
+    </p>
+  </div>
+
+  <div>
+    <h2 className="text-xl font-semibold mb-2">Signs you should NOT text</h2>
+    <ul className="list-disc ml-5 text-gray-700">
+      <li>You already texted last and got no reply</li>
+      <li>It has only been a short time</li>
+      <li>The conversation ended negatively</li>
+      <li>You feel anxious or emotional</li>
+      <li>You are trying to force a response</li>
+    </ul>
+  </div>
+
+  <div>
+    <h2 className="text-xl font-semibold mb-2">Signs you should text</h2>
+    <ul className="list-disc ml-5 text-gray-700">
+      <li>They texted last</li>
+      <li>Enough time has passed</li>
+      <li>The vibe was positive</li>
+      <li>You have a clear reason to reach out</li>
+      <li>There is mutual interest</li>
+    </ul>
+  </div>
+
+  <div>
+    <h2 className="text-xl font-semibold mb-2">FAQ</h2>
+    <div className="space-y-3 text-gray-700">
+      <p><strong>How long should I wait to text?</strong><br/>Usually at least a day if you texted last.</p>
+      <p><strong>Is double texting bad?</strong><br/>It can reduce attraction if done too quickly.</p>
+      <p><strong>What if they don’t reply?</strong><br/>Don’t chase. Let them come back to you.</p>
+    </div>
+  </div>
+
+</section>
+
     </main>
   );
 }
