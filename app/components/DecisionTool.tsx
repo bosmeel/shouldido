@@ -26,17 +26,19 @@ export default function DecisionTool() {
     setVibe(null);
   }
 
+  const stepsOrder = ["context","stage","last","delay","timing","intent","vibe","result"];
+  const currentStepIndex = stepsOrder.indexOf(step) + 1;
+  const totalSteps = context === "formal" ? 5 : 7;
+
   function getResult() {
 
-    // 🔵 FORMAL FLOW
     if (context === "formal") {
-
       if (intent === "uncertain") {
         return {
           label: "WAIT",
           color: "text-orange-500",
           msg: "Uncertainty is not a reason to act.",
-          sub: "Wait and follow up later with clarity.",
+          sub: "Wait and follow up later.",
           text: null,
         };
       }
@@ -59,8 +61,6 @@ export default function DecisionTool() {
         text: "Hi, just checking in regarding my previous message.",
       };
     }
-
-    // 🔴 RELATIONAL FLOW
 
     if (timing === "night" && intent !== "practical") {
       return {
@@ -143,9 +143,14 @@ export default function DecisionTool() {
   );
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
 
-      {/* CONTEXT */}
+      {step !== "result" && (
+        <div className="text-center text-sm text-gray-400">
+          Step {currentStepIndex} of {totalSteps}
+        </div>
+      )}
+
       {step === "context" && (
         <div className="text-center space-y-4">
           <p>What type of situation is this?</p>
@@ -156,7 +161,6 @@ export default function DecisionTool() {
         </div>
       )}
 
-      {/* STAGE */}
       {step === "stage" && (
         <div className="text-center space-y-4">
           <p>What stage are you in?</p>
@@ -165,7 +169,6 @@ export default function DecisionTool() {
         </div>
       )}
 
-      {/* LAST */}
       {step === "last" && (
         <div className="text-center space-y-4">
           <p>Who texted last?</p>
@@ -174,7 +177,6 @@ export default function DecisionTool() {
         </div>
       )}
 
-      {/* DELAY */}
       {step === "delay" && (
         <div className="text-center space-y-4">
           <p>How long since the last message?</p>
@@ -184,7 +186,6 @@ export default function DecisionTool() {
         </div>
       )}
 
-      {/* TIMING */}
       {step === "timing" && (
         <div className="text-center space-y-4">
           <p>When are you about to send this?</p>
@@ -193,7 +194,6 @@ export default function DecisionTool() {
         </div>
       )}
 
-      {/* INTENT */}
       {step === "intent" && (
         <div className="text-center space-y-4">
           <p>Why do you want to text?</p>
@@ -217,7 +217,6 @@ export default function DecisionTool() {
         </div>
       )}
 
-      {/* VIBE */}
       {step === "vibe" && context === "relational" && (
         <div className="text-center space-y-4">
           <p>How was the vibe?</p>
@@ -227,7 +226,6 @@ export default function DecisionTool() {
         </div>
       )}
 
-      {/* RESULT */}
       {step === "result" && (
         <div className="text-center space-y-4 mt-6">
           <div className={`text-5xl font-bold ${result.color}`}>
