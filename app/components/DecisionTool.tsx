@@ -2,9 +2,26 @@
 
 import { useState } from "react";
 
-type Step = "context" | "stage" | "last" | "delay" | "timing" | "intent" | "vibe" | "result";
+type Step =
+  | "context"
+  | "stage"
+  | "last"
+  | "delay"
+  | "timing"
+  | "intent"
+  | "vibe"
+  | "result";
 
-const FLOW: Step[] = ["context","stage","last","delay","timing","intent","vibe","result"];
+const FLOW: Step[] = [
+  "context",
+  "stage",
+  "last",
+  "delay",
+  "timing",
+  "intent",
+  "vibe",
+  "result",
+];
 
 export default function DecisionTool() {
   const [stepIndex, setStepIndex] = useState(0);
@@ -19,8 +36,8 @@ export default function DecisionTool() {
 
   const step = FLOW[stepIndex];
 
-  function next() {
-    setStepIndex((i) => i + 1);
+  function next(stepJump = 1) {
+    setStepIndex((i) => i + stepJump);
   }
 
   function reset() {
@@ -35,7 +52,6 @@ export default function DecisionTool() {
   }
 
   function getResult() {
-
     if (context === "formal") {
       if (intent === "uncertain") {
         return {
@@ -160,14 +176,26 @@ export default function DecisionTool() {
         <div className="text-center space-y-4">
           <p>What type of situation is this?</p>
           <div className="flex justify-center gap-3">
-            <Button label="Personal / Dating" onClick={() => { setContext("relational"); next(); }} />
-            <Button label="Formal / Work" onClick={() => { setContext("formal"); next(); }} />
+            <Button
+              label="Personal / Dating"
+              onClick={() => {
+                setContext("relational");
+                next(); // normale flow
+              }}
+            />
+            <Button
+              label="Formal / Work"
+              onClick={() => {
+                setContext("formal");
+                next(2); // 🔥 skip stage direct
+              }}
+            />
           </div>
         </div>
       )}
 
       {/* STAGE */}
-      {step === "stage" && context === "relational" && (
+      {step === "stage" && (
         <div className="text-center space-y-4">
           <p>What stage are you in?</p>
           <Button label="New / Early" onClick={() => { setStage("new"); next(); }} />
