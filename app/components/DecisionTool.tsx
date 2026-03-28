@@ -342,7 +342,7 @@ export default function DecisionTool() {
             {result.sub}
           </p>
 
-          <div className="mt-6 p-5 rounded-2xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-left">
+          <div className="mt-6 p-5 rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-black dark:text-white text-left">
 
             {!showPremium ? (
               <>
