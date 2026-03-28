@@ -210,14 +210,14 @@ export default function DecisionTool() {
   }) => (
     <button
       onClick={onClick}
-      className="px-5 py-2 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all text-sm font-medium"
+      className="px-5 py-2 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-100 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all text-sm font-medium"
     >
       {label}
     </button>
   );
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-10 text-gray-800 dark:text-gray-100">
 
       {step !== "result" && (
         <div className="text-center text-xs text-gray-400 dark:text-gray-500 uppercase tracking-widest">
@@ -229,7 +229,7 @@ export default function DecisionTool() {
 
         {step === "context" && (
           <>
-            <p className="text-lg font-medium text-gray-800 dark:text-gray-100">
+            <p className="text-lg font-medium">
               What’s the situation?
             </p>
             <div className="flex justify-center gap-3">
@@ -241,7 +241,7 @@ export default function DecisionTool() {
 
         {step === "stage" && (
           <>
-            <p className="text-lg font-medium text-gray-800 dark:text-gray-100">
+            <p className="text-lg font-medium">
               What stage are you in?
             </p>
             <div className="flex justify-center gap-3">
@@ -253,7 +253,7 @@ export default function DecisionTool() {
 
         {step === "last" && (
           <>
-            <p className="text-lg font-medium text-gray-800 dark:text-gray-100">
+            <p className="text-lg font-medium">
               Who texted last?
             </p>
             <div className="flex justify-center gap-3">
@@ -265,7 +265,7 @@ export default function DecisionTool() {
 
         {step === "delay" && (
           <>
-            <p className="text-lg font-medium text-gray-800 dark:text-gray-100">
+            <p className="text-lg font-medium">
               How long ago?
             </p>
             <div className="flex flex-wrap justify-center gap-3">
@@ -278,7 +278,7 @@ export default function DecisionTool() {
 
         {step === "timing" && (
           <>
-            <p className="text-lg font-medium text-gray-800 dark:text-gray-100">
+            <p className="text-lg font-medium">
               When are you about to send this?
             </p>
             <div className="flex justify-center gap-3">
@@ -290,7 +290,7 @@ export default function DecisionTool() {
 
         {step === "intent" && (
           <>
-            <p className="text-lg font-medium text-gray-800 dark:text-gray-100">
+            <p className="text-lg font-medium">
               Why?
             </p>
 
@@ -316,7 +316,7 @@ export default function DecisionTool() {
 
         {step === "vibe" && (
           <>
-            <p className="text-lg font-medium text-gray-800 dark:text-gray-100">
+            <p className="text-lg font-medium">
               Vibe?
             </p>
             <div className="flex justify-center gap-3">
@@ -336,9 +336,7 @@ export default function DecisionTool() {
             {result.label}
           </div>
 
-          <p className="text-lg text-gray-800 dark:text-gray-100">
-            {result.msg}
-          </p>
+          <p className="text-lg">{result.msg}</p>
 
           <p className="text-sm text-gray-400 dark:text-gray-500">
             {result.sub}
@@ -348,7 +346,7 @@ export default function DecisionTool() {
 
             {!showPremium ? (
               <>
-                <p className="font-medium text-gray-800 dark:text-gray-100">
+                <p className="font-medium">
                   Want to understand why?
                 </p>
 
@@ -368,17 +366,17 @@ export default function DecisionTool() {
 
                 <div>
                   <p className="text-gray-400 dark:text-gray-500 text-xs">What’s happening</p>
-                  <p className="text-gray-800 dark:text-gray-100">{getInsight().why}</p>
+                  <p>{getInsight().why}</p>
                 </div>
 
                 <div>
                   <p className="text-gray-400 dark:text-gray-500 text-xs">What to do</p>
-                  <p className="text-gray-800 dark:text-gray-100">{getInsight().action}</p>
+                  <p>{getInsight().action}</p>
                 </div>
 
                 <div>
                   <p className="text-gray-400 dark:text-gray-500 text-xs">Avoid this</p>
-                  <p className="text-gray-800 dark:text-gray-100">{getInsight().avoid}</p>
+                  <p>{getInsight().avoid}</p>
                 </div>
 
               </div>
