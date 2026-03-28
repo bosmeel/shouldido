@@ -2,7 +2,7 @@ import DecisionTool from "./components/DecisionTool";
 
 export default function Page() {
   return (
-    <main className="min-h-screen">
+    <main className="min-h-screen bg-white dark:bg-black text-gray-900 dark:text-gray-100">
 
       {/* 🔥 CHAOTIC HERO */}
       <section className="text-center py-16 px-6 bg-gradient-to-br from-pink-500 via-purple-500 to-indigo-500 text-white">
@@ -20,7 +20,7 @@ export default function Page() {
       {/* 🧠 TOOL */}
       <section className="max-w-xl mx-auto px-6 py-12">
 
-        <div className="bg-white rounded-3xl p-6 shadow-xl">
+        <div className="bg-white dark:bg-gray-900 rounded-3xl p-6 shadow-xl border border-gray-200 dark:border-gray-800">
 
           <DecisionTool />
 
@@ -29,7 +29,7 @@ export default function Page() {
       </section>
 
       {/* 🪶 SUBTEXT */}
-      <p className="text-center text-xs text-gray-400 pb-10">
+      <p className="text-center text-xs text-gray-400 dark:text-gray-500 pb-10">
         built for overthinkers
       </p>
 
