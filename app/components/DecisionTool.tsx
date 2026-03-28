@@ -176,20 +176,8 @@ export default function DecisionTool() {
         <div className="text-center space-y-4">
           <p>What type of situation is this?</p>
           <div className="flex justify-center gap-3">
-            <Button
-              label="Personal / Dating"
-              onClick={() => {
-                setContext("relational");
-                next(); // normale flow
-              }}
-            />
-            <Button
-              label="Formal / Work"
-              onClick={() => {
-                setContext("formal");
-                next(2); // 🔥 skip stage direct
-              }}
-            />
+            <Button label="Personal / Dating" onClick={() => { setContext("relational"); next(); }} />
+            <Button label="Formal / Work" onClick={() => { setContext("formal"); next(2); }} />
           </div>
         </div>
       )}
@@ -238,24 +226,24 @@ export default function DecisionTool() {
 
           {context === "formal" ? (
             <>
-              <Button label="Follow up / status" onClick={() => { setIntent("followup"); next(); }} />
-              <Button label="Practical reason" onClick={() => { setIntent("practical"); next(); }} />
-              <Button label="I feel uncertain" onClick={() => { setIntent("uncertain"); next(); }} />
-              <Button label="I feel impatient" onClick={() => { setIntent("impatient"); next(); }} />
+              <Button label="Follow up / status" onClick={() => { setIntent("followup"); next(2); }} />
+              <Button label="Practical reason" onClick={() => { setIntent("practical"); next(2); }} />
+              <Button label="I feel uncertain" onClick={() => { setIntent("uncertain"); next(2); }} />
+              <Button label="I feel impatient" onClick={() => { setIntent("impatient"); next(2); }} />
             </>
           ) : (
             <>
               <Button label="I miss them" onClick={() => { setIntent("miss"); next(); }} />
               <Button label="Practical reason" onClick={() => { setIntent("practical"); next(); }} />
               <Button label="Flirting" onClick={() => { setIntent("flirt"); next(); }} />
-              <Button label="I feel anxious" onClick={() => { setIntent("anxious"); next(); }} />
+              <Button label="I feel anxious" onClick={() => { setIntent("anxious"); next(2); }} />
             </>
           )}
         </div>
       )}
 
       {/* VIBE */}
-      {step === "vibe" && context === "relational" && (
+      {step === "vibe" && (
         <div className="text-center space-y-4">
           <p>How was the vibe?</p>
           <Button label="Good" onClick={() => { setVibe("good"); next(); }} />
