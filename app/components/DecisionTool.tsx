@@ -170,56 +170,32 @@ export default function DecisionTool() {
 
     if (timing === "night" && intent !== "practical") {
       return {
-        why: "Late-day relational decisions are more likely to be driven by loneliness, rumination, or impulse.",
-        action: "Sleep on it and review the urge in the morning.",
-        avoid: "Do not send emotional, ambiguous, or needy messages at night.",
+        why: "Late-day decisions are more emotional and less rational.",
+        action: "Sleep on it and decide in the morning.",
+        avoid: "Don’t send emotional messages at night.",
       };
     }
 
     if (intent === "anxious") {
       return {
-        why: "Your urge to text is being driven by discomfort and uncertainty rather than strong signal from the other person.",
-        action: "Pause and let the emotion settle before doing anything.",
-        avoid: "Do not use texting to self-soothe.",
+        why: "You’re reacting to uncertainty, not actual signals.",
+        action: "Wait until your emotion settles.",
+        avoid: "Don’t use texting to self-soothe.",
       };
     }
 
     if (last === "me" && delay === "short") {
       return {
-        why: "They have not re-engaged yet. Sending another message now shifts the balance too far in your direction.",
-        action: "Wait and let them come back on their own.",
-        avoid: "Do not double text to force momentum.",
-      };
-    }
-
-    if (stage === "new" && delay === "long") {
-      return {
-        why: "In an early-stage connection, a light re-entry after some time can feel normal rather than needy.",
-        action: "Reach out casually and keep the tone low-pressure.",
-        avoid: "Do not make it emotionally heavy too early.",
-      };
-    }
-
-    if (stage === "ongoing" && last === "them" && vibe === "good") {
-      return {
-        why: "The interaction is balanced and there is enough reciprocity to justify reaching out.",
-        action: "Send something natural and in line with the existing dynamic.",
-        avoid: "Do not suddenly overinvest or change tone.",
-      };
-    }
-
-    if (intent === "flirt") {
-      return {
-        why: "There is enough room here for light initiative, as long as it stays playful and not over-eager.",
-        action: "Keep it short, confident, and a little teasing.",
-        avoid: "Do not turn flirtation into validation-seeking.",
+        why: "They haven’t responded yet — pushing now lowers your position.",
+        action: "Wait and let them re-engage.",
+        avoid: "Don’t double text.",
       };
     }
 
     return {
-      why: "The situation does not yet give a strong enough signal to act confidently.",
-      action: "Give it more time and wait for better clarity.",
-      avoid: "Do not force contact to create certainty.",
+      why: "There isn’t enough signal yet.",
+      action: "Give it more time.",
+      avoid: "Don’t force interaction.",
     };
   }
 
@@ -234,7 +210,7 @@ export default function DecisionTool() {
   }) => (
     <button
       onClick={onClick}
-      className="px-5 py-2 rounded-full bg-gray-100 hover:bg-black hover:text-white transition-all text-sm font-medium"
+      className="px-5 py-2 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all text-sm font-medium"
     >
       {label}
     </button>
@@ -242,198 +218,96 @@ export default function DecisionTool() {
 
   return (
     <div className="space-y-10">
+
       {step !== "result" && (
-        <div className="text-center text-xs text-gray-400 uppercase tracking-widest">
+        <div className="text-center text-xs text-gray-400 dark:text-gray-500 uppercase tracking-widest">
           Step {stepIndex + 1}
         </div>
       )}
 
       <div className="text-center space-y-6">
+
         {step === "context" && (
           <>
-            <p className="text-lg font-medium">What’s the situation?</p>
+            <p className="text-lg font-medium text-gray-800 dark:text-gray-100">
+              What’s the situation?
+            </p>
             <div className="flex justify-center gap-3">
-              <Button
-                label="Personal / Dating"
-                onClick={() => {
-                  setContext("relational");
-                  next();
-                }}
-              />
-              <Button
-                label="Formal / Work"
-                onClick={() => {
-                  setContext("formal");
-                  next(2);
-                }}
-              />
+              <Button label="Personal / Dating" onClick={() => { setContext("relational"); next(); }} />
+              <Button label="Formal / Work" onClick={() => { setContext("formal"); next(2); }} />
             </div>
           </>
         )}
 
         {step === "stage" && (
           <>
-            <p className="text-lg font-medium">What stage are you in?</p>
+            <p className="text-lg font-medium text-gray-800 dark:text-gray-100">
+              What stage are you in?
+            </p>
             <div className="flex justify-center gap-3">
-              <Button
-                label="New"
-                onClick={() => {
-                  setStage("new");
-                  next();
-                }}
-              />
-              <Button
-                label="Ongoing"
-                onClick={() => {
-                  setStage("ongoing");
-                  next();
-                }}
-              />
+              <Button label="New" onClick={() => { setStage("new"); next(); }} />
+              <Button label="Ongoing" onClick={() => { setStage("ongoing"); next(); }} />
             </div>
           </>
         )}
 
         {step === "last" && (
           <>
-            <p className="text-lg font-medium">Who texted last?</p>
+            <p className="text-lg font-medium text-gray-800 dark:text-gray-100">
+              Who texted last?
+            </p>
             <div className="flex justify-center gap-3">
-              <Button
-                label="I did"
-                onClick={() => {
-                  setLast("me");
-                  next();
-                }}
-              />
-              <Button
-                label="They did"
-                onClick={() => {
-                  setLast("them");
-                  next();
-                }}
-              />
+              <Button label="I did" onClick={() => { setLast("me"); next(); }} />
+              <Button label="They did" onClick={() => { setLast("them"); next(); }} />
             </div>
           </>
         )}
 
         {step === "delay" && (
           <>
-            <p className="text-lg font-medium">How long ago?</p>
+            <p className="text-lg font-medium text-gray-800 dark:text-gray-100">
+              How long ago?
+            </p>
             <div className="flex flex-wrap justify-center gap-3">
-              <Button
-                label="Just now"
-                onClick={() => {
-                  setDelay("short");
-                  next();
-                }}
-              />
-              <Button
-                label="Hours"
-                onClick={() => {
-                  setDelay("hours");
-                  next();
-                }}
-              />
-              <Button
-                label="1+ day"
-                onClick={() => {
-                  setDelay("long");
-                  next();
-                }}
-              />
+              <Button label="Just now" onClick={() => { setDelay("short"); next(); }} />
+              <Button label="Hours" onClick={() => { setDelay("hours"); next(); }} />
+              <Button label="1+ day" onClick={() => { setDelay("long"); next(); }} />
             </div>
           </>
         )}
 
         {step === "timing" && (
           <>
-            <p className="text-lg font-medium">
+            <p className="text-lg font-medium text-gray-800 dark:text-gray-100">
               When are you about to send this?
             </p>
             <div className="flex justify-center gap-3">
-              <Button
-                label="Daytime"
-                onClick={() => {
-                  setTiming("day");
-                  next();
-                }}
-              />
-              <Button
-                label="Evening"
-                onClick={() => {
-                  setTiming("night");
-                  next();
-                }}
-              />
+              <Button label="Daytime" onClick={() => { setTiming("day"); next(); }} />
+              <Button label="Evening" onClick={() => { setTiming("night"); next(); }} />
             </div>
           </>
         )}
 
         {step === "intent" && (
           <>
-            <p className="text-lg font-medium">Why?</p>
+            <p className="text-lg font-medium text-gray-800 dark:text-gray-100">
+              Why?
+            </p>
 
             <div className="flex flex-wrap justify-center gap-3">
               {context === "formal" ? (
                 <>
-                  <Button
-                    label="Follow up"
-                    onClick={() => {
-                      setIntent("followup");
-                      next(2);
-                    }}
-                  />
-                  <Button
-                    label="Practical"
-                    onClick={() => {
-                      setIntent("practical");
-                      next(2);
-                    }}
-                  />
-                  <Button
-                    label="Uncertain"
-                    onClick={() => {
-                      setIntent("uncertain");
-                      next(2);
-                    }}
-                  />
-                  <Button
-                    label="Impatient"
-                    onClick={() => {
-                      setIntent("impatient");
-                      next(2);
-                    }}
-                  />
+                  <Button label="Follow up" onClick={() => { setIntent("followup"); next(2); }} />
+                  <Button label="Practical" onClick={() => { setIntent("practical"); next(2); }} />
+                  <Button label="Uncertain" onClick={() => { setIntent("uncertain"); next(2); }} />
+                  <Button label="Impatient" onClick={() => { setIntent("impatient"); next(2); }} />
                 </>
               ) : (
                 <>
-                  <Button
-                    label="Miss them"
-                    onClick={() => {
-                      setIntent("miss");
-                      next();
-                    }}
-                  />
-                  <Button
-                    label="Practical"
-                    onClick={() => {
-                      setIntent("practical");
-                      next();
-                    }}
-                  />
-                  <Button
-                    label="Flirt"
-                    onClick={() => {
-                      setIntent("flirt");
-                      next();
-                    }}
-                  />
-                  <Button
-                    label="Anxious"
-                    onClick={() => {
-                      setIntent("anxious");
-                      next(2);
-                    }}
-                  />
+                  <Button label="Miss them" onClick={() => { setIntent("miss"); next(); }} />
+                  <Button label="Practical" onClick={() => { setIntent("practical"); next(); }} />
+                  <Button label="Flirt" onClick={() => { setIntent("flirt"); next(); }} />
+                  <Button label="Anxious" onClick={() => { setIntent("anxious"); next(2); }} />
                 </>
               )}
             </div>
@@ -442,84 +316,83 @@ export default function DecisionTool() {
 
         {step === "vibe" && (
           <>
-            <p className="text-lg font-medium">Vibe?</p>
+            <p className="text-lg font-medium text-gray-800 dark:text-gray-100">
+              Vibe?
+            </p>
             <div className="flex justify-center gap-3">
-              <Button
-                label="Good"
-                onClick={() => {
-                  setVibe("good");
-                  next();
-                }}
-              />
-              <Button
-                label="Mixed"
-                onClick={() => {
-                  setVibe("mixed");
-                  next();
-                }}
-              />
-              <Button
-                label="Bad"
-                onClick={() => {
-                  setVibe("bad");
-                  next();
-                }}
-              />
+              <Button label="Good" onClick={() => { setVibe("good"); next(); }} />
+              <Button label="Mixed" onClick={() => { setVibe("mixed"); next(); }} />
+              <Button label="Bad" onClick={() => { setVibe("bad"); next(); }} />
             </div>
           </>
         )}
+
       </div>
 
       {step === "result" && (
         <div className="text-center space-y-5 mt-6">
+
           <div className={`text-6xl font-extrabold ${result.color}`}>
             {result.label}
           </div>
 
-          <p className="text-lg">{result.msg}</p>
-          <p className="text-sm text-gray-400">{result.sub}</p>
+          <p className="text-lg text-gray-800 dark:text-gray-100">
+            {result.msg}
+          </p>
 
-          <div className="mt-6 p-5 rounded-2xl border border-gray-200 bg-gray-50 text-left">
+          <p className="text-sm text-gray-400 dark:text-gray-500">
+            {result.sub}
+          </p>
+
+          <div className="mt-6 p-5 rounded-2xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-left">
+
             {!showPremium ? (
               <>
-                <p className="font-medium">Want to understand why?</p>
+                <p className="font-medium text-gray-800 dark:text-gray-100">
+                  Want to understand why?
+                </p>
 
-                <p className="text-sm text-gray-500 mt-1">
+                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
                   See the reasoning behind this decision
                 </p>
 
                 <button
                   onClick={() => setShowPremium(true)}
-                  className="mt-4 px-5 py-2 rounded-full bg-black text-white text-sm"
+                  className="mt-4 px-5 py-2 rounded-full bg-black text-white dark:bg-white dark:text-black text-sm"
                 >
                   Show explanation
                 </button>
               </>
             ) : (
               <div className="space-y-4 text-sm">
+
                 <div>
-                  <p className="text-gray-400 text-xs">What’s happening</p>
-                  <p>{getInsight().why}</p>
+                  <p className="text-gray-400 dark:text-gray-500 text-xs">What’s happening</p>
+                  <p className="text-gray-800 dark:text-gray-100">{getInsight().why}</p>
                 </div>
 
                 <div>
-                  <p className="text-gray-400 text-xs">What to do</p>
-                  <p>{getInsight().action}</p>
+                  <p className="text-gray-400 dark:text-gray-500 text-xs">What to do</p>
+                  <p className="text-gray-800 dark:text-gray-100">{getInsight().action}</p>
                 </div>
 
                 <div>
-                  <p className="text-gray-400 text-xs">Avoid this</p>
-                  <p>{getInsight().avoid}</p>
+                  <p className="text-gray-400 dark:text-gray-500 text-xs">Avoid this</p>
+                  <p className="text-gray-800 dark:text-gray-100">{getInsight().avoid}</p>
                 </div>
+
               </div>
             )}
+
           </div>
 
           <button onClick={reset} className="text-sm underline mt-4">
             Start over
           </button>
+
         </div>
       )}
+
     </div>
   );
 }
