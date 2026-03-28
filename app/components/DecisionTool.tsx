@@ -25,7 +25,7 @@ const FLOW: Step[] = [
 
 export default function DecisionTool() {
   const [stepIndex, setStepIndex] = useState(0);
-
+const [showPremium, setShowPremium] = useState(false);
   const [context, setContext] = useState<string | null>(null);
   const [stage, setStage] = useState<string | null>(null);
   const [last, setLast] = useState<string | null>(null);
@@ -150,7 +150,22 @@ export default function DecisionTool() {
       text: null,
     };
   }
+function getPremiumText() {
 
+  if (intent === "anxious") {
+    return "Hey, no rush to reply. Just wanted to say I enjoyed talking earlier 🙂";
+  }
+
+  if (intent === "flirt") {
+    return "Be honest… do you always leave people curious like this?";
+  }
+
+  if (context === "formal") {
+    return "Hi, just checking in regarding my previous message. Let me know when you have a moment.";
+  }
+
+  return "Hey, I was just thinking about you. How’s your day going?";
+}
   const result = getResult();
 
   const Button = ({ label, onClick }: any) => (
@@ -264,28 +279,63 @@ export default function DecisionTool() {
 
       {/* RESULT */}
       {step === "result" && (
-        <div className="text-center space-y-4">
+  <div className="text-center space-y-5 mt-6">
 
-          <div className={`text-6xl font-extrabold ${result.color}`}>
-            {result.label}
+    {/* RESULT */}
+    <div className={`text-6xl font-extrabold ${result.color}`}>
+      {result.label}
+    </div>
+
+    <p className="text-lg">{result.msg}</p>
+    <p className="text-sm text-gray-400">{result.sub}</p>
+
+    {/* PREMIUM BLOCK */}
+    <div className="mt-6 p-5 rounded-2xl border border-gray-200 bg-gradient-to-br from-pink-50 to-purple-50">
+
+      {!showPremium ? (
+        <>
+          <p className="font-medium">
+            Want the exact text to send?
+          </p>
+
+          <p className="text-sm text-gray-500 mt-1">
+            Based on your situation
+          </p>
+
+          <button
+            onClick={() => setShowPremium(true)}
+            className="mt-4 px-6 py-2 rounded-full bg-black text-white text-sm"
+          >
+            Unlock message
+          </button>
+        </>
+      ) : (
+        <>
+          <p className="text-xs text-gray-400 mb-2">
+            Suggested message:
+          </p>
+
+          <div className="bg-white border rounded-xl p-4 text-left text-sm">
+            {getPremiumText()}
           </div>
 
-          <p className="text-lg">{result.msg}</p>
-          <p className="text-sm text-gray-400">{result.sub}</p>
-
-          {result.text && (
-            <div className="mt-4 p-4 border rounded-xl bg-gray-50 text-left">
-              <p className="text-xs text-gray-400 mb-1">Copy this:</p>
-              <p className="font-medium">{result.text}</p>
-            </div>
-          )}
-
-          <button onClick={reset} className="text-sm underline mt-4">
-            Start over
+          <button
+            onClick={() => navigator.clipboard.writeText(getPremiumText())}
+            className="mt-3 text-xs underline"
+          >
+            Copy text
           </button>
-
-        </div>
+        </>
       )}
+
+    </div>
+
+    <button onClick={reset} className="text-sm underline mt-4">
+      Start over
+    </button>
+
+  </div>
+)}
 
     </div>
   );
