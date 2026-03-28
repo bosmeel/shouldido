@@ -4,8 +4,10 @@ import { useState } from "react";
 
 type Step = "context" | "stage" | "last" | "delay" | "timing" | "intent" | "vibe" | "result";
 
+const FLOW = ["context","stage","last","delay","timing","intent","vibe","result"];
+
 export default function DecisionTool() {
-  const [step, setStep] = useState<Step>("context");
+  const [stepIndex, setStepIndex] = useState(0);
 
   const [context, setContext] = useState<string | null>(null);
   const [stage, setStage] = useState<string | null>(null);
@@ -15,8 +17,14 @@ export default function DecisionTool() {
   const [intent, setIntent] = useState<string | null>(null);
   const [vibe, setVibe] = useState<string | null>(null);
 
+  const step = FLOW[stepIndex];
+
+  function next() {
+    setStepIndex((i) => i + 1);
+  }
+
   function reset() {
-    setStep("context");
+    setStepIndex(0);
     setContext(null);
     setStage(null);
     setLast(null);
@@ -26,12 +34,9 @@ export default function DecisionTool() {
     setVibe(null);
   }
 
-  const stepsOrder = ["context","stage","last","delay","timing","intent","vibe","result"];
-  const currentStepIndex = stepsOrder.indexOf(step) + 1;
-  const totalSteps = context === "formal" ? 5 : 7;
-
   function getResult() {
 
+    // FORMAL
     if (context === "formal") {
       if (intent === "uncertain") {
         return {
@@ -61,6 +66,8 @@ export default function DecisionTool() {
         text: "Hi, just checking in regarding my previous message.",
       };
     }
+
+    // RELATIONAL
 
     if (timing === "night" && intent !== "practical") {
       return {
@@ -147,85 +154,97 @@ export default function DecisionTool() {
 
       {step !== "result" && (
         <div className="text-center text-sm text-gray-400">
-          Step {currentStepIndex} of {totalSteps}
+          Step {stepIndex + 1} of 7
         </div>
       )}
 
+      {/* CONTEXT */}
       {step === "context" && (
         <div className="text-center space-y-4">
           <p>What type of situation is this?</p>
           <div className="flex justify-center gap-3">
-            <Button label="Personal / Dating" onClick={() => { setContext("relational"); setStep("stage"); }} />
-            <Button label="Formal / Work" onClick={() => { setContext("formal"); setStep("delay"); }} />
+            <Button label="Personal / Dating" onClick={() => { setContext("relational"); next(); }} />
+            <Button label="Formal / Work" onClick={() => { setContext("formal"); next(); }} />
           </div>
         </div>
       )}
 
+      {/* STAGE (alleen relational) */}
       {step === "stage" && (
-        <div className="text-center space-y-4">
-          <p>What stage are you in?</p>
-          <Button label="New / Early" onClick={() => { setStage("new"); setStep("last"); }} />
-          <Button label="Ongoing" onClick={() => { setStage("ongoing"); setStep("last"); }} />
-        </div>
+        context === "relational" ? (
+          <div className="text-center space-y-4">
+            <p>What stage are you in?</p>
+            <Button label="New / Early" onClick={() => { setStage("new"); next(); }} />
+            <Button label="Ongoing" onClick={() => { setStage("ongoing"); next(); }} />
+          </div>
+        ) : next()
       )}
 
+      {/* LAST */}
       {step === "last" && (
         <div className="text-center space-y-4">
           <p>Who texted last?</p>
-          <Button label="I did" onClick={() => { setLast("me"); setStep("delay"); }} />
-          <Button label="They did" onClick={() => { setLast("them"); setStep("delay"); }} />
+          <Button label="I did" onClick={() => { setLast("me"); next(); }} />
+          <Button label="They did" onClick={() => { setLast("them"); next(); }} />
         </div>
       )}
 
+      {/* DELAY */}
       {step === "delay" && (
         <div className="text-center space-y-4">
           <p>How long since the last message?</p>
-          <Button label="Just now" onClick={() => { setDelay("short"); setStep("timing"); }} />
-          <Button label="Few hours" onClick={() => { setDelay("hours"); setStep("timing"); }} />
-          <Button label="1+ day" onClick={() => { setDelay("long"); setStep("timing"); }} />
+          <Button label="Just now" onClick={() => { setDelay("short"); next(); }} />
+          <Button label="Few hours" onClick={() => { setDelay("hours"); next(); }} />
+          <Button label="1+ day" onClick={() => { setDelay("long"); next(); }} />
         </div>
       )}
 
+      {/* TIMING */}
       {step === "timing" && (
         <div className="text-center space-y-4">
           <p>When are you about to send this?</p>
-          <Button label="Morning / Daytime" onClick={() => { setTiming("day"); setStep("intent"); }} />
-          <Button label="Evening / Night" onClick={() => { setTiming("night"); setStep("intent"); }} />
+          <Button label="Morning / Daytime" onClick={() => { setTiming("day"); next(); }} />
+          <Button label="Evening / Night" onClick={() => { setTiming("night"); next(); }} />
         </div>
       )}
 
+      {/* INTENT */}
       {step === "intent" && (
         <div className="text-center space-y-4">
           <p>Why do you want to text?</p>
 
           {context === "formal" ? (
             <>
-              <Button label="Follow up / status" onClick={() => { setIntent("followup"); setStep("result"); }} />
-              <Button label="Practical reason" onClick={() => { setIntent("practical"); setStep("result"); }} />
-              <Button label="I feel uncertain" onClick={() => { setIntent("uncertain"); setStep("result"); }} />
-              <Button label="I feel impatient" onClick={() => { setIntent("impatient"); setStep("result"); }} />
+              <Button label="Follow up / status" onClick={() => { setIntent("followup"); next(); }} />
+              <Button label="Practical reason" onClick={() => { setIntent("practical"); next(); }} />
+              <Button label="I feel uncertain" onClick={() => { setIntent("uncertain"); next(); }} />
+              <Button label="I feel impatient" onClick={() => { setIntent("impatient"); next(); }} />
             </>
           ) : (
             <>
-              <Button label="I miss them" onClick={() => { setIntent("miss"); setStep("vibe"); }} />
-              <Button label="Practical reason" onClick={() => { setIntent("practical"); setStep("vibe"); }} />
-              <Button label="Flirting" onClick={() => { setIntent("flirt"); setStep("vibe"); }} />
-              <Button label="I feel anxious" onClick={() => { setIntent("anxious"); setStep("result"); }} />
+              <Button label="I miss them" onClick={() => { setIntent("miss"); next(); }} />
+              <Button label="Practical reason" onClick={() => { setIntent("practical"); next(); }} />
+              <Button label="Flirting" onClick={() => { setIntent("flirt"); next(); }} />
+              <Button label="I feel anxious" onClick={() => { setIntent("anxious"); next(); }} />
             </>
           )}
 
         </div>
       )}
 
-      {step === "vibe" && context === "relational" && (
-        <div className="text-center space-y-4">
-          <p>How was the vibe?</p>
-          <Button label="Good" onClick={() => { setVibe("good"); setStep("result"); }} />
-          <Button label="Mixed" onClick={() => { setVibe("mixed"); setStep("result"); }} />
-          <Button label="Bad" onClick={() => { setVibe("bad"); setStep("result"); }} />
-        </div>
+      {/* VIBE */}
+      {step === "vibe" && (
+        context === "relational" ? (
+          <div className="text-center space-y-4">
+            <p>How was the vibe?</p>
+            <Button label="Good" onClick={() => { setVibe("good"); next(); }} />
+            <Button label="Mixed" onClick={() => { setVibe("mixed"); next(); }} />
+            <Button label="Bad" onClick={() => { setVibe("bad"); next(); }} />
+          </div>
+        ) : next()
       )}
 
+      {/* RESULT */}
       {step === "result" && (
         <div className="text-center space-y-4 mt-6">
           <div className={`text-5xl font-bold ${result.color}`}>
