@@ -53,151 +53,203 @@ export default function DecisionTool() {
     setVibe(null);
   }
 
+  // 🔥 ELITE DECISION LOGIC
   function getResult() {
-    if (context === "formal") {
-      if (intent === "uncertain") {
-        return {
-          label: "WAIT",
-          color: "text-orange-400",
-          msg: "Uncertainty is not a reason to act.",
-          sub: "Wait and follow up later.",
-        };
-      }
 
-      if (intent === "impatient" && delay === "short") {
-        return {
-          label: "WAIT",
-          color: "text-orange-400",
-          msg: "You’re acting too quickly.",
-          sub: "Give them more time.",
-        };
-      }
+  const doubleText = last === "me" && delay === "short";
+  const waitingShort = delay === "short";
+  const longWait = delay === "long";
+  const theyPulledBack = vibe === "bad";
+  const mixedSignal = vibe === "mixed";
 
+  // 🔴 1. EMOTIONAL DRIVERS (dominant)
+  if (intent === "anxiety") {
+    return {
+      label: "DON’T TEXT",
+      color: "text-red-400",
+      msg: "You’re reacting to uncertainty.",
+      sub: "That leads to bad timing.",
+    };
+  }
+
+  if (intent === "impulse") {
+    return {
+      label: "WAIT",
+      color: "text-orange-400",
+      msg: "This is just a moment.",
+      sub: "Don’t act on it.",
+    };
+  }
+
+  // 🔴 2. STRUCTURAL WEAK POSITION
+  if (doubleText) {
+    return {
+      label: "DON’T TEXT",
+      color: "text-red-400",
+      msg: "You’re about to double text.",
+      sub: "That lowers your position.",
+    };
+  }
+
+  // 🔴 3. THEY PULLED BACK
+  if (theyPulledBack) {
+    return {
+      label: "WAIT",
+      color: "text-orange-400",
+      msg: "They pulled back.",
+      sub: "Let them re-engage.",
+    };
+  }
+
+  // 🟡 4. TOO SOON
+  if (waitingShort && intent !== "practical") {
+    return {
+      label: "WAIT",
+      color: "text-orange-400",
+      msg: "It’s too soon.",
+      sub: "Give it space.",
+    };
+  }
+
+  // 🟢 5. CONTEXT OVERRIDE
+
+  // FORMAL
+  if (context === "formal") {
+    if (intent === "practical") {
       return {
         label: "TEXT",
         color: "text-green-400",
-        msg: "A follow-up is appropriate.",
-        sub: "Keep it short and professional.",
-      };
-    }
-
-    if (timing === "night" && intent !== "practical") {
-      return {
-        label: "WAIT",
-        color: "text-orange-400",
-        msg: "This is an emotional moment.",
-        sub: "Wait until morning.",
-      };
-    }
-
-    if (intent === "anxious") {
-      return {
-        label: "DON’T TEXT",
-        color: "text-red-400",
-        msg: "You’re acting from anxiety.",
-        sub: "This will pass if you wait.",
-      };
-    }
-
-    if (last === "me" && delay === "short") {
-      return {
-        label: "DON’T TEXT",
-        color: "text-red-400",
-        msg: "This is double texting.",
-        sub: "Wait. Don’t chase.",
-      };
-    }
-
-    if (stage === "new" && delay === "long") {
-      return {
-        label: "TEXT",
-        color: "text-green-400",
-        msg: "It’s okay to reach out.",
-        sub: "Early stage is flexible.",
-      };
-    }
-
-    if (stage === "ongoing" && last === "them" && vibe === "good") {
-      return {
-        label: "TEXT",
-        color: "text-green-400",
-        msg: "You’re good to text.",
-        sub: "Keep it natural.",
-      };
-    }
-
-    if (intent === "flirt") {
-      return {
-        label: "TEXT",
-        color: "text-green-400",
-        msg: "Go for it.",
-        sub: "Keep it playful.",
+        msg: "You have a valid reason.",
+        sub: "Keep it short and clear.",
       };
     }
 
     return {
       label: "WAIT",
       color: "text-orange-400",
-      msg: "Not enough signal yet.",
-      sub: "Give it more time.",
+      msg: "There’s no strong reason yet.",
+      sub: "Wait for a clearer moment.",
     };
   }
 
-  function getInsight() {
-    if (context === "formal") {
-      if (intent === "uncertain") {
-        return {
-          why: "You do not have enough objective reason to follow up yet. The urge comes from uncertainty, not necessity.",
-          action: "Wait and review the situation later with a clear purpose.",
-          avoid: "Do not send a message just to reduce your own tension.",
-        };
-      }
-
-      if (intent === "impatient" && delay === "short") {
-        return {
-          why: "The other side likely has not had enough time to respond. Following up too soon can feel pushy.",
-          action: "Give it more time before checking in again.",
-          avoid: "Do not confuse your urgency with their responsibility to reply immediately.",
-        };
-      }
-
-      return {
-        why: "Your reason is legitimate and the situation allows for a calm follow-up.",
-        action: "Send a short, polite, low-pressure message.",
-        avoid: "Do not overexplain or sound frustrated.",
-      };
-    }
-
-    if (timing === "night" && intent !== "practical") {
-      return {
-        why: "Late-day decisions are more emotional and less rational.",
-        action: "Sleep on it and decide in the morning.",
-        avoid: "Don’t send emotional messages at night.",
-      };
-    }
-
-    if (intent === "anxious") {
-      return {
-        why: "You’re reacting to uncertainty, not actual signals.",
-        action: "Wait until your emotion settles.",
-        avoid: "Don’t use texting to self-soothe.",
-      };
-    }
-
-    if (last === "me" && delay === "short") {
-      return {
-        why: "They haven’t responded yet — pushing now lowers your position.",
-        action: "Wait and let them re-engage.",
-        avoid: "Don’t double text.",
-      };
-    }
-
+  // PRACTICAL
+  if (intent === "practical") {
     return {
-      why: "There isn’t enough signal yet.",
-      action: "Give it more time.",
-      avoid: "Don’t force interaction.",
+      label: "TEXT",
+      color: "text-green-400",
+      msg: "You have a clear reason.",
+      sub: "Keep it simple.",
     };
   }
+
+  // 🟢 6. GENUINE SIGNAL
+  if (intent === "genuine" && last === "them" && vibe === "good") {
+    return {
+      label: "TEXT",
+      color: "text-green-400",
+      msg: "They opened the door.",
+      sub: "You can step in.",
+    };
+  }
+
+  // 🟢 7. SAFE REOPEN
+  if (longWait && intent === "genuine") {
+    return {
+      label: "TEXT",
+      color: "text-green-400",
+      msg: "Enough time has passed.",
+      sub: "You can restart lightly.",
+    };
+  }
+
+  // 🟡 8. MIXED SIGNAL
+  if (mixedSignal) {
+    return {
+      label: "WAIT",
+      color: "text-orange-400",
+      msg: "The signal is unclear.",
+      sub: "Wait for more clarity.",
+    };
+  }
+
+  // 🟡 DEFAULT
+  return {
+    label: "WAIT",
+    color: "text-orange-400",
+    msg: "There isn’t enough signal.",
+    sub: "Give it more time.",
+  };
+}
+
+  // 🔥 STRONGER PSYCHOLOGICAL EXPLANATIONS
+  function getInsight() {
+
+  const doubleText = last === "me" && delay === "short";
+  const theyPulledBack = vibe === "bad";
+  const mixedSignal = vibe === "mixed";
+
+  if (intent === "anxiety") {
+    return {
+      why: "You’re trying to remove uncertainty by taking action.",
+      action: "Wait until the feeling settles.",
+      avoid: "Don’t use texting to calm yourself.",
+    };
+  }
+
+  if (intent === "impulse") {
+    return {
+      why: "This urge isn’t based on anything real.",
+      action: "Let it pass.",
+      avoid: "Don’t act out of boredom.",
+    };
+  }
+
+  if (doubleText) {
+    return {
+      why: "They haven’t responded yet, and you’re trying to push.",
+      action: "Wait for them to come back.",
+      avoid: "Don’t double text.",
+    };
+  }
+
+  if (theyPulledBack) {
+    return {
+      why: "Their energy dropped, and you’re trying to fix it.",
+      action: "Give them space.",
+      avoid: "Don’t chase reduced interest.",
+    };
+  }
+
+  if (intent === "practical") {
+    return {
+      why: "There is a clear external reason.",
+      action: "Send a short message.",
+      avoid: "Don’t overcomplicate it.",
+    };
+  }
+
+  if (intent === "genuine" && last === "them") {
+    return {
+      why: "They already invested.",
+      action: "You can match that energy.",
+      avoid: "Don’t overthink it.",
+    };
+  }
+
+  if (mixedSignal) {
+    return {
+      why: "The situation isn’t clear yet.",
+      action: "Wait for more signal.",
+      avoid: "Don’t force clarity.",
+    };
+  }
+
+  return {
+    why: "There’s no strong reason to act.",
+    action: "Do nothing for now.",
+    avoid: "Don’t create unnecessary interaction.",
+  };
+}
 
   const result = getResult();
 
@@ -229,9 +281,7 @@ export default function DecisionTool() {
 
         {step === "context" && (
           <>
-            <p className="text-lg font-medium">
-              What’s the situation?
-            </p>
+            <p className="text-lg font-medium">What’s the situation?</p>
             <div className="flex justify-center gap-3">
               <Button label="Personal / Dating" onClick={() => { setContext("relational"); next(); }} />
               <Button label="Formal / Work" onClick={() => { setContext("formal"); next(2); }} />
@@ -241,9 +291,7 @@ export default function DecisionTool() {
 
         {step === "stage" && (
           <>
-            <p className="text-lg font-medium">
-              What stage are you in?
-            </p>
+            <p className="text-lg font-medium">What stage are you in?</p>
             <div className="flex justify-center gap-3">
               <Button label="New" onClick={() => { setStage("new"); next(); }} />
               <Button label="Ongoing" onClick={() => { setStage("ongoing"); next(); }} />
@@ -253,9 +301,7 @@ export default function DecisionTool() {
 
         {step === "last" && (
           <>
-            <p className="text-lg font-medium">
-              Who texted last?
-            </p>
+            <p className="text-lg font-medium">Who texted last?</p>
             <div className="flex justify-center gap-3">
               <Button label="I did" onClick={() => { setLast("me"); next(); }} />
               <Button label="They did" onClick={() => { setLast("them"); next(); }} />
@@ -265,9 +311,7 @@ export default function DecisionTool() {
 
         {step === "delay" && (
           <>
-            <p className="text-lg font-medium">
-              How long ago?
-            </p>
+            <p className="text-lg font-medium">How long ago?</p>
             <div className="flex flex-wrap justify-center gap-3">
               <Button label="Just now" onClick={() => { setDelay("short"); next(); }} />
               <Button label="Hours" onClick={() => { setDelay("hours"); next(); }} />
@@ -278,9 +322,7 @@ export default function DecisionTool() {
 
         {step === "timing" && (
           <>
-            <p className="text-lg font-medium">
-              When are you about to send this?
-            </p>
+            <p className="text-lg font-medium">When are you about to send this?</p>
             <div className="flex justify-center gap-3">
               <Button label="Daytime" onClick={() => { setTiming("day"); next(); }} />
               <Button label="Evening" onClick={() => { setTiming("night"); next(); }} />
@@ -290,35 +332,20 @@ export default function DecisionTool() {
 
         {step === "intent" && (
           <>
-            <p className="text-lg font-medium">
-              Why?
-            </p>
+            <p className="text-lg font-medium">Why do you want to text?</p>
 
             <div className="flex flex-wrap justify-center gap-3">
-              {context === "formal" ? (
-                <>
-                  <Button label="Follow up" onClick={() => { setIntent("followup"); next(2); }} />
-                  <Button label="Practical" onClick={() => { setIntent("practical"); next(2); }} />
-                  <Button label="Uncertain" onClick={() => { setIntent("uncertain"); next(2); }} />
-                  <Button label="Impatient" onClick={() => { setIntent("impatient"); next(2); }} />
-                </>
-              ) : (
-                <>
-                  <Button label="Miss them" onClick={() => { setIntent("miss"); next(); }} />
-                  <Button label="Practical" onClick={() => { setIntent("practical"); next(); }} />
-                  <Button label="Flirt" onClick={() => { setIntent("flirt"); next(); }} />
-                  <Button label="Anxious" onClick={() => { setIntent("anxious"); next(2); }} />
-                </>
-              )}
+              <Button label="I feel unsure / want clarity" onClick={() => { setIntent("anxiety"); next(2); }} />
+              <Button label="I genuinely want to talk" onClick={() => { setIntent("genuine"); next(); }} />
+              <Button label="I have a clear reason" onClick={() => { setIntent("practical"); next(2); }} />
+              <Button label="I just feel like texting" onClick={() => { setIntent("impulse"); next(2); }} />
             </div>
           </>
         )}
 
         {step === "vibe" && (
           <>
-            <p className="text-lg font-medium">
-              Vibe?
-            </p>
+            <p className="text-lg font-medium">Vibe?</p>
             <div className="flex justify-center gap-3">
               <Button label="Good" onClick={() => { setVibe("good"); next(); }} />
               <Button label="Mixed" onClick={() => { setVibe("mixed"); next(); }} />
@@ -337,19 +364,13 @@ export default function DecisionTool() {
           </div>
 
           <p className="text-lg">{result.msg}</p>
+          <p className="text-sm text-gray-400 dark:text-gray-500">{result.sub}</p>
 
-          <p className="text-sm text-gray-400 dark:text-gray-500">
-            {result.sub}
-          </p>
-
-          <div className="mt-6 p-5 rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-black dark:text-white text-left">
+          <div className="mt-6 p-5 rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-left">
 
             {!showPremium ? (
               <>
-                <p className="font-medium">
-                  Want to understand why?
-                </p>
-
+                <p className="font-medium">Want to understand why?</p>
                 <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
                   See the reasoning behind this decision
                 </p>
