@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 type Step = "context" | "stage" | "last" | "delay" | "timing" | "intent" | "vibe" | "result";
 
@@ -33,12 +33,6 @@ export default function DecisionTool() {
     setIntent(null);
     setVibe(null);
   }
-
-  // 🔧 FIX: auto-skip logic (NIET in JSX)
-  useEffect(() => {
-    if (step === "stage" && context === "formal") next();
-    if (step === "vibe" && context === "formal") next();
-  }, [step, context]);
 
   function getResult() {
 
@@ -161,6 +155,7 @@ export default function DecisionTool() {
         </div>
       )}
 
+      {/* CONTEXT */}
       {step === "context" && (
         <div className="text-center space-y-4">
           <p>What type of situation is this?</p>
@@ -171,6 +166,7 @@ export default function DecisionTool() {
         </div>
       )}
 
+      {/* STAGE */}
       {step === "stage" && context === "relational" && (
         <div className="text-center space-y-4">
           <p>What stage are you in?</p>
@@ -179,6 +175,7 @@ export default function DecisionTool() {
         </div>
       )}
 
+      {/* LAST */}
       {step === "last" && (
         <div className="text-center space-y-4">
           <p>Who texted last?</p>
@@ -187,6 +184,7 @@ export default function DecisionTool() {
         </div>
       )}
 
+      {/* DELAY */}
       {step === "delay" && (
         <div className="text-center space-y-4">
           <p>How long since the last message?</p>
@@ -196,6 +194,7 @@ export default function DecisionTool() {
         </div>
       )}
 
+      {/* TIMING */}
       {step === "timing" && (
         <div className="text-center space-y-4">
           <p>When are you about to send this?</p>
@@ -204,6 +203,7 @@ export default function DecisionTool() {
         </div>
       )}
 
+      {/* INTENT */}
       {step === "intent" && (
         <div className="text-center space-y-4">
           <p>Why do you want to text?</p>
@@ -226,6 +226,7 @@ export default function DecisionTool() {
         </div>
       )}
 
+      {/* VIBE */}
       {step === "vibe" && context === "relational" && (
         <div className="text-center space-y-4">
           <p>How was the vibe?</p>
@@ -235,6 +236,7 @@ export default function DecisionTool() {
         </div>
       )}
 
+      {/* RESULT */}
       {step === "result" && (
         <div className="text-center space-y-4 mt-6">
           <div className={`text-5xl font-bold ${result.color}`}>
