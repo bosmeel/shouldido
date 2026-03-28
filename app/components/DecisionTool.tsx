@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 type Step = "context" | "stage" | "last" | "delay" | "timing" | "intent" | "vibe" | "result";
 
-const FLOW = ["context","stage","last","delay","timing","intent","vibe","result"];
+const FLOW: Step[] = ["context","stage","last","delay","timing","intent","vibe","result"];
 
 export default function DecisionTool() {
   const [stepIndex, setStepIndex] = useState(0);
@@ -34,9 +34,14 @@ export default function DecisionTool() {
     setVibe(null);
   }
 
+  // 🔧 FIX: auto-skip logic (NIET in JSX)
+  useEffect(() => {
+    if (step === "stage" && context === "formal") next();
+    if (step === "vibe" && context === "formal") next();
+  }, [step, context]);
+
   function getResult() {
 
-    // FORMAL
     if (context === "formal") {
       if (intent === "uncertain") {
         return {
@@ -66,8 +71,6 @@ export default function DecisionTool() {
         text: "Hi, just checking in regarding my previous message.",
       };
     }
-
-    // RELATIONAL
 
     if (timing === "night" && intent !== "practical") {
       return {
@@ -158,7 +161,6 @@ export default function DecisionTool() {
         </div>
       )}
 
-      {/* CONTEXT */}
       {step === "context" && (
         <div className="text-center space-y-4">
           <p>What type of situation is this?</p>
@@ -169,18 +171,14 @@ export default function DecisionTool() {
         </div>
       )}
 
-      {/* STAGE (alleen relational) */}
-      {step === "stage" && (
-        context === "relational" ? (
-          <div className="text-center space-y-4">
-            <p>What stage are you in?</p>
-            <Button label="New / Early" onClick={() => { setStage("new"); next(); }} />
-            <Button label="Ongoing" onClick={() => { setStage("ongoing"); next(); }} />
-          </div>
-        ) : next()
+      {step === "stage" && context === "relational" && (
+        <div className="text-center space-y-4">
+          <p>What stage are you in?</p>
+          <Button label="New / Early" onClick={() => { setStage("new"); next(); }} />
+          <Button label="Ongoing" onClick={() => { setStage("ongoing"); next(); }} />
+        </div>
       )}
 
-      {/* LAST */}
       {step === "last" && (
         <div className="text-center space-y-4">
           <p>Who texted last?</p>
@@ -189,7 +187,6 @@ export default function DecisionTool() {
         </div>
       )}
 
-      {/* DELAY */}
       {step === "delay" && (
         <div className="text-center space-y-4">
           <p>How long since the last message?</p>
@@ -199,7 +196,6 @@ export default function DecisionTool() {
         </div>
       )}
 
-      {/* TIMING */}
       {step === "timing" && (
         <div className="text-center space-y-4">
           <p>When are you about to send this?</p>
@@ -208,7 +204,6 @@ export default function DecisionTool() {
         </div>
       )}
 
-      {/* INTENT */}
       {step === "intent" && (
         <div className="text-center space-y-4">
           <p>Why do you want to text?</p>
@@ -228,23 +223,18 @@ export default function DecisionTool() {
               <Button label="I feel anxious" onClick={() => { setIntent("anxious"); next(); }} />
             </>
           )}
-
         </div>
       )}
 
-      {/* VIBE */}
-      {step === "vibe" && (
-        context === "relational" ? (
-          <div className="text-center space-y-4">
-            <p>How was the vibe?</p>
-            <Button label="Good" onClick={() => { setVibe("good"); next(); }} />
-            <Button label="Mixed" onClick={() => { setVibe("mixed"); next(); }} />
-            <Button label="Bad" onClick={() => { setVibe("bad"); next(); }} />
-          </div>
-        ) : next()
+      {step === "vibe" && context === "relational" && (
+        <div className="text-center space-y-4">
+          <p>How was the vibe?</p>
+          <Button label="Good" onClick={() => { setVibe("good"); next(); }} />
+          <Button label="Mixed" onClick={() => { setVibe("mixed"); next(); }} />
+          <Button label="Bad" onClick={() => { setVibe("bad"); next(); }} />
+        </div>
       )}
 
-      {/* RESULT */}
       {step === "result" && (
         <div className="text-center space-y-4 mt-6">
           <div className={`text-5xl font-bold ${result.color}`}>
